@@ -410,7 +410,11 @@ b1AE8   LDA highScoreTable,X
         STA a37
         JMP RunTitleSequence
 
-j1B2E   JSR DrawScreenInterstitialEffect
+;-------------------------------
+; j1B2E
+;-------------------------------
+j1B2E    
+        JSR DrawScreenInterstitialEffect
         JSR DrawScoreStrapLine
         LDA a36
         BEQ b1B3F
@@ -423,7 +427,11 @@ b1B3F   LDA #>p3334
         STA a39
         LDA a32
         STA a38
-j1B4B   LDA #$06
+;-------------------------------
+; j1B4B
+;-------------------------------
+j1B4B    
+        LDA #$06
         STA a1E
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
@@ -454,9 +462,9 @@ b1B80   JSR s29B8
         DEX 
         BNE b1B80
         JSR s29B8
-b1B8B   JSR s2B90
+b1B8B   JSR PrepareToDieNewLevelEffect
         JSR s1C6A
-        JMP j1E96
+        JMP MainGameLoop
 
 ;------------------------------------------------
 ; DrawScoreStrapLine
@@ -528,7 +536,11 @@ scoreLineColors .BYTE $9D,$9E,$9F,$A0,$A1,$A2,$33,$20
                 .BYTE $20,$20,$20,$20,$20,$20,$20,$A3
                 .BYTE $34
 scoreLineText   .TEXT "0000000 HELL$GATE 0000000"
-j1C43   LDA #$01
+;-------------------------------
+; j1C43
+;-------------------------------
+j1C43    
+        LDA #$01
         STA a11
         STA a16
         LDA #$16
@@ -549,9 +561,9 @@ j1C43   LDA #$01
         STA a1A
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s1C6A
-;-------------------------------
+;------------------------------------------------
 s1C6A    
         LDA #$A0
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
@@ -566,9 +578,9 @@ b1C76   STA f3E00,X
         JSR s1C87
         JMP j21E0
 
-;-------------------------------
+;------------------------------------------------
 ; s1C87
-;-------------------------------
+;------------------------------------------------
 s1C87    
         LDA a18
         BEQ b1C8E
@@ -594,9 +606,9 @@ b1C8E   LDA #$67
         JSR s27B5
         JMP j1D04
 
-;-------------------------------
+;------------------------------------------------
 ; s1CB9
-;-------------------------------
+;------------------------------------------------
 s1CB9    
         LDY a1A
         CPY #$01
@@ -605,7 +617,11 @@ s1CB9
 b1CC1   STA charToDraw
         RTS 
 
-j1CC4   LDA #$68
+;-------------------------------
+; j1CC4
+;-------------------------------
+j1CC4    
+        LDA #$68
         JSR s1CB9
         LDA #$07
         STA colorToDraw
@@ -633,7 +649,11 @@ j1CC4   LDA #$68
         JSR s1CB9
         INC screenPtrYPPos
         JSR s27B5
-j1D04   LDA a19
+;-------------------------------
+; j1D04
+;-------------------------------
+j1D04    
+        LDA a19
         BEQ b1D0B
         JMP j1D33
 
@@ -656,7 +676,11 @@ b1D0B   LDA #$61
         STA screenPtrYPPos
         JMP s27B5
 
-j1D33   LDA #$62
+;-------------------------------
+; j1D33
+;-------------------------------
+j1D33    
+        LDA #$62
         JSR s1CB9
         LDA #$07
         STA colorToDraw
@@ -735,9 +759,9 @@ b1DBB   RTS
 ;------------------------------------------------
 ; s1DBC
 ;------------------------------------------------
-;-------------------------------
+;------------------------------------------------
 ; s1DBC
-;-------------------------------
+;------------------------------------------------
 s1DBC 
         LDA a17
         CMP #$19
@@ -762,9 +786,9 @@ b1DD8   LDA a18
 b1DDF   INC a17
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s1DE2
-;-------------------------------
+;------------------------------------------------
 s1DE2    
         LDA a17
         CMP #$02
@@ -789,9 +813,9 @@ b1DFE   LDA a18
 b1E05   INC a15
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s1E08
-;-------------------------------
+;------------------------------------------------
 s1E08    
         LDA a12
         CMP #$16
@@ -813,9 +837,9 @@ b1E18   INC a19
 b1E25   INC a12
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s1E28
-;-------------------------------
+;------------------------------------------------
 s1E28    
         LDA a12
         CMP #$02
@@ -835,12 +859,13 @@ b1E38   INC a19
         RTS 
 
 b1E45   INC a10
+
+;------------------------------------------------
+; CheckJoystickInput
+;------------------------------------------------
 b1E47   RTS 
 
-;-------------------------------
-; s1E48
-;-------------------------------
-s1E48    
+CheckJoystickInput    
         DEC a1C
         BNE b1E47
         LDA a1A7E
@@ -876,15 +901,19 @@ b1E8A   LDA joystickInput
         JSR s1E08
 b1E93   JMP s1C87
 
-j1E96   JSR s1E48
-        JSR s20F0
+;------------------------------------------------
+; MainGameLoop
+;------------------------------------------------
+MainGameLoop
+        JSR CheckJoystickInput
+        JSR PlayBackgroundSounds
         JSR s1FDD
         JSR s2287
-        JMP j1E96
+        JMP MainGameLoop
 
-;-------------------------------
+;------------------------------------------------
 ; s1EA5
-;-------------------------------
+;------------------------------------------------
 s1EA5    
         INC f3FE0,X
         LDA f3FE0,X
@@ -920,9 +949,9 @@ b1EE8   LDA f3FF0,X
         JSR s25C1
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s1EF3
-;-------------------------------
+;------------------------------------------------
 s1EF3    
         DEC f3FE0,X
         LDA f3FE0,X
@@ -958,9 +987,9 @@ b1F34   LDA f3FF0,X
         JSR s25C1
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s1F41
-;-------------------------------
+;------------------------------------------------
 s1F41    
         DEC f3FE0,X
         LDA f3FE0,X
@@ -996,9 +1025,9 @@ b1F82   LDA f3FF0,X
         JSR s25C1
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s1F8F
-;-------------------------------
+;------------------------------------------------
 s1F8F    
         INC f3FE0,X
         LDA f3FE0,X
@@ -1034,9 +1063,9 @@ b1FD2   LDA f3FF0,X
         JSR s25C1
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s1FDD
-;-------------------------------
+;------------------------------------------------
 s1FDD    
         DEC a1D
         BEQ b1FE2
@@ -1105,9 +1134,9 @@ b204C   JSR s2063
 b205D   JSR s2063
         JMP j2093
 
-;-------------------------------
+;------------------------------------------------
 ; s2063
-;-------------------------------
+;------------------------------------------------
 s2063    
         LDX #$00
 b2065   LDA f3FA0,X
@@ -1133,7 +1162,11 @@ b2070   LDA colorToDraw
         STA a20
         RTS 
 
-j2093   LDA #$01
+;-------------------------------
+; j2093
+;-------------------------------
+j2093    
+        LDA #$01
         STA colorToDraw
         LDX #$00
 b2099   LDA f3FA0,X
@@ -1154,7 +1187,11 @@ b20B3   CMP #$03
         JMP j20C0
 
 b20BD   JSR s1EA5
-j20C0   INX 
+;-------------------------------
+; j20C0
+;-------------------------------
+j20C0    
+        INX 
         CPX #$10
         BNE b2099
         RTS 
@@ -1164,12 +1201,13 @@ b20C8   DEY
         BNE b20C8
         JMP j20C0
 
+
+;------------------------------------------------
+; PlaySound1
+;------------------------------------------------
 b20CE   RTS 
 
-;-------------------------------
-; s20CF
-;-------------------------------
-s20CF    
+PlaySound1    
         LDA VICCRB   ;$900B - frequency of sound osc.2 (alto)
         AND #$80
         BEQ b20CE
@@ -1187,48 +1225,55 @@ b20EA   LDA #$00
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
 b20EF   RTS 
 
-;-------------------------------
-; s20F0
-;-------------------------------
-s20F0    
+;------------------------------------------------
+; PlayBackgroundSounds
+;------------------------------------------------
+PlayBackgroundSounds    
         DEC a1F
         BNE b20EF
         LDA a1A7F
         STA a1F
-        JSR s20CF
-        JMP j26F2
+        JSR PlaySound1
+        JMP PlaySound2
+        ;Returns
 
-f20FF   .BYTE $06,$02,$04,$05,$03,$07,$01,$00
-;-------------------------------
-; s2107
-;-------------------------------
-s2107    
+ExplosionColors   .BYTE $06,$02,$04,$05,$03,$07,$01,$00
+;------------------------------------------------
+; AnimateTrail
+;------------------------------------------------
+AnimateTrail    
         LDA #$20
         STA charToDraw
         LDA #$08
         STA a0B
         LDA a09
         STA a0A
-        JSR s2129
+        JSR DrawExplosionTrail
         LDA #$A4
         STA charToDraw
-j211A   DEC a0A
+        ; Fall through
+
+;-------------------------------
+; DrawExplosionTrails
+;-------------------------------
+DrawExplosionTrails    
+        DEC a0A
         BEQ b2128
         DEC a0B
         BEQ b2128
-        JSR s2129
-        JMP j211A
+        JSR DrawExplosionTrail
+        JMP DrawExplosionTrails
 
 b2128   RTS 
 
-;-------------------------------
-; s2129
-;-------------------------------
-s2129    
+;------------------------------------------------
+; DrawExplosionTrail
+;------------------------------------------------
+DrawExplosionTrail    
         LDA a0B
         AND #$07
         TAX 
-        LDA f20FF,X
+        LDA ExplosionColors,X
         STA colorToDraw
         LDA a07
         SEC 
@@ -1236,27 +1281,27 @@ s2129
         STA screenPtrXPos
         LDA a08
         STA screenPtrYPPos
-        JSR s2160
+        JSR OverwriteCharacter
         LDA a07
         CLC 
         ADC a0A
         STA screenPtrXPos
-        JSR s2160
+        JSR OverwriteCharacter
         LDA a07
         STA screenPtrXPos
         LDA a08
         SEC 
         SBC a0A
         STA screenPtrYPPos
-        JSR s2160
+        JSR OverwriteCharacter
         LDA a08
         CLC 
         ADC a0A
         STA screenPtrYPPos
-;-------------------------------
-; s2160
-;-------------------------------
-s2160    
+;------------------------------------------------
+; OverwriteCharacter
+;------------------------------------------------
+OverwriteCharacter    
         LDA screenPtrXPos
         AND #$80
         BEQ b2167
@@ -1278,9 +1323,9 @@ b2167   LDA screenPtrXPos
         BNE b2166
 b2184   JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s2187
-;-------------------------------
+;------------------------------------------------
 s2187    
         LDA #$20
         STA a09
@@ -1299,22 +1344,22 @@ b218B   LDA a10
         STA VICCRE   ;$900E - sound volume
         LDA a11
         STA a08
-        JSR s2107
+        JSR AnimateTrail
         LDA a12
         STA a07
         LDA a13
         STA a08
-        JSR s2107
+        JSR AnimateTrail
         LDA a14
         STA a07
         LDA a15
         STA a08
-        JSR s2107
+        JSR AnimateTrail
         LDA a16
         STA a07
         LDA a17
         STA a08
-        JSR s2107
+        JSR AnimateTrail
         LDX #$02
         LDY #$00
 b21D0   DEY 
@@ -1327,7 +1372,11 @@ b21D0   DEY
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         RTS 
 
-j21E0   LDA #$0F
+;-------------------------------
+; j21E0
+;-------------------------------
+j21E0    
+        LDA #$0F
         STA VICCRE   ;$900E - sound volume
 b21E5   LDA #$00
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
@@ -1381,7 +1430,7 @@ b223D   LDA #$07
         ADC #$84
         STA a0F
         LDY #$00
-        LDA f20FF,X
+        LDA ExplosionColors,X
 b225A   STA (p0E),Y
         INY 
         CPY #$08
@@ -1389,7 +1438,7 @@ b225A   STA (p0E),Y
         LDA a22
         EOR #$07
         TAX 
-        LDA f20FF,X
+        LDA ExplosionColors,X
         LDY #$03
 b226B   STA f96BE,Y
         DEY 
@@ -1399,9 +1448,9 @@ b226B   STA f96BE,Y
 f2274   .BYTE $00,$04,$20,$1E,$10,$14,$0A,$0A
         .BYTE $14,$0F,$0F,$1E,$00,$00,$00,$0C
         .BYTE $0C,$0C,$0C
-;-------------------------------
+;------------------------------------------------
 ; s2287
-;-------------------------------
+;------------------------------------------------
 s2287    
         DEC a26
         BEQ b228C
@@ -1424,9 +1473,9 @@ b22A4   INX
         BNE b2293
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s22AA
-;-------------------------------
+;------------------------------------------------
 s22AA    
         LDA f3E00,X
         TAY 
@@ -1480,7 +1529,11 @@ p2301   STA screenPtrXPos
         STA screenPtrXPos
         JSR s2388
         DEC f3EA0,X
-j2323   LDA f3EA0,X
+;-------------------------------
+; j2323
+;-------------------------------
+j2323    
+        LDA f3EA0,X
         BNE b2337
         LDA f3E80,X
         STA f3E00,X
@@ -1526,9 +1579,9 @@ b2337   LDA f3E20,X
         STA screenPtrXPos
         DEC charToDraw
         DEC charToDraw
-;-------------------------------
+;------------------------------------------------
 ; s2388
-;-------------------------------
+;------------------------------------------------
 s2388    
         LDA screenPtrXPos
         AND #$80
@@ -1563,7 +1616,11 @@ b23B3   JSR DrawCharacter
 
 f23B9   .BYTE $00,$20,$1B,$1C,$1D,$1E,$25,$26
         .BYTE $27,$28,$AF
-j23C4   CMP #$10
+;-------------------------------
+; j23C4
+;-------------------------------
+j23C4    
+        CMP #$10
         BNE b23CB
         JMP j2637
 
@@ -1588,7 +1645,11 @@ f23EB   .BYTE $00,$00,$80,$85,$8A,$8F,$00,$00
         .BYTE $94,$09,$80,$8A
 f23F7   .BYTE $01,$01,$07,$05,$03,$02,$01,$05
         .BYTE $04,$09,$06,$00
-j2403   INC f3EC0,X
+;-------------------------------
+; j2403
+;-------------------------------
+j2403    
+        INC f3EC0,X
         LDA f3EC0,X
         AND #$01
         STA f3EC0,X
@@ -1631,7 +1692,11 @@ b2447   LDA f23EB,Y
         DEC screenPtrYPPos
         JMP DrawCharacter
 
-j2463   CMP #$01
+;-------------------------------
+; j2463
+;-------------------------------
+j2463    
+        CMP #$01
         BEQ b246A
         JMP j24F2
 
@@ -1698,7 +1763,11 @@ b24B8   LDA #$01
         BNE b24B8
         RTS 
 
-j24F2   CMP #$02
+;-------------------------------
+; j24F2
+;-------------------------------
+j24F2    
+        CMP #$02
         BEQ b24F9
         JMP j2553
 
@@ -1744,7 +1813,11 @@ b252E   LDA f3E20,X
         INC charToDraw
         JMP DrawCharacter
 
-j2553   LDA f3E20,X
+;-------------------------------
+; j2553
+;-------------------------------
+j2553    
+        LDA f3E20,X
         CMP #$17
         BNE b255D
         JMP j25B8
@@ -1777,9 +1850,9 @@ b2582   LDA f3E20,X
         INC screenPtrXPos
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s259D
-;-------------------------------
+;------------------------------------------------
 s259D    
         STX screenPtrYPPos
         INC a27
@@ -1788,7 +1861,11 @@ s259D
         LDX screenPtrYPPos
         RTS 
 
-j25A9   JSR s259D
+;-------------------------------
+; j25A9
+;-------------------------------
+j25A9    
+        JSR s259D
         AND #$03
         BEQ j25A9
         CMP #$01
@@ -1796,14 +1873,18 @@ j25A9   JSR s259D
         STA f3E60,X
         RTS 
 
-j25B8   JSR s259D
+;-------------------------------
+; j25B8
+;-------------------------------
+j25B8    
+        JSR s259D
         AND #$01
         STA f3E60,X
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s25C1
-;-------------------------------
+;------------------------------------------------
 s25C1    
         LDA f3FC0,X
         STA screenPtrXPos
@@ -1825,7 +1906,11 @@ b25D7   PLA
 b25DD   LDA f3FC0,X
         CMP f3E20,Y
         BEQ b25FA
-j25E5   INY 
+;-------------------------------
+; j25E5
+;-------------------------------
+j25E5    
+        INY 
         CPY #$20
         BNE b25DD
         LDA a29
@@ -1865,7 +1950,11 @@ b262D   LDA #$00
         INC a29
         JMP j25E5
 
-j2637   LDA f3EA0,X
+;-------------------------------
+; j2637
+;-------------------------------
+j2637    
+        LDA f3EA0,X
         CMP #$10
         BEQ b2641
         JMP j267C
@@ -1887,9 +1976,9 @@ b2641   LDA f3E20,X
         JSR s266A
         DEC screenPtrYPPos
         DEC screenPtrYPPos
-;-------------------------------
+;------------------------------------------------
 ; s266A
-;-------------------------------
+;------------------------------------------------
 s266A    
         TXA 
         PHA 
@@ -1905,7 +1994,11 @@ b2676   JSR DrawCharacter
         TAX 
         RTS 
 
-j267C   DEC f3EC0,X
+;-------------------------------
+; j267C
+;-------------------------------
+j267C    
+        DEC f3EC0,X
         LDA f3EC0,X
         AND #$01
         STA f3EC0,X
@@ -1952,16 +2045,24 @@ b268C   LDA f3E20,X
         TAX 
         RTS 
 
-j26E2   LDA f3EA0,X
+;-------------------------------
+; j26E2
+;-------------------------------
+j26E2    
+        LDA f3EA0,X
         EOR #$0F
         CLC 
         ROR 
         TAY 
-        LDA f20FF,Y
+        LDA ExplosionColors,Y
         STA colorToDraw
         JMP b2337
 
-j26F2   LDA a28
+;-------------------------------
+; PlaySound2
+;-------------------------------
+PlaySound2    
+        LDA a28
         BNE b26F7
 b26F6   RTS 
 
@@ -1977,7 +2078,11 @@ b26F7   DEC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         RTS 
 
-j2710   LDX #$00
+;-------------------------------
+; j2710
+;-------------------------------
+j2710    
+        LDX #$00
 b2712   LDA f3E00,X
         BEQ b271D
         INX 
@@ -2006,9 +2111,9 @@ b272A   LDA #$01
         STA f3EC0,X
 b274B   RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s274C
-;-------------------------------
+;------------------------------------------------
 s274C    
         LDA #$00
         STA f3E00,X
@@ -2059,9 +2164,9 @@ b2799   CMP #$08
         STA screenPtrYPPos
         JMP j2710
 
-;-------------------------------
+;------------------------------------------------
 ; s27B5
-;-------------------------------
+;------------------------------------------------
 s27B5    
         LDA a2A
         BEQ b27C0
@@ -2080,11 +2185,11 @@ b27C6   LDA a36
         DEC a12C2
         JMP b27C3
 
-b27D7   JMP j2C95
+b27D7   JMP PlayerKilled
 
-;-------------------------------
+;------------------------------------------------
 ; s27DA
-;-------------------------------
+;------------------------------------------------
 s27DA    
         LDA #$00
         STA a2A
@@ -2110,22 +2215,22 @@ b27F5   LDA a10
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
         LDA a11
         STA a08
-        JSR s2851
+        JSR DrawEnemyExplosion
         LDA a12
         STA a07
         LDA a13
         STA a08
-        JSR s2851
+        JSR DrawEnemyExplosion
         LDA a14
         STA a07
         LDA a15
         STA a08
-        JSR s2851
+        JSR DrawEnemyExplosion
         LDA a16
         STA a07
         LDA a17
         STA a08
-        JSR s2851
+        JSR DrawEnemyExplosion
         LDX #$02
 b2836   LDY #$80
 b2838   DEY 
@@ -2143,24 +2248,24 @@ b2838   DEY
 
 b2850   RTS 
 
-;-------------------------------
-; s2851
-;-------------------------------
-s2851    
+;------------------------------------------------
+; DrawEnemyExplosion
+;------------------------------------------------
+DrawEnemyExplosion    
         LDA #$A4
         STA charToDraw
         LDA #$08
         STA a0B
         LDA a09
         STA a0A
-        JSR j211A
+        JSR DrawExplosionTrails
         LDA #$20
         STA charToDraw
-        JMP s2129
+        JMP DrawExplosionTrail
 
-;-------------------------------
+;------------------------------------------------
 ; s2867
-;-------------------------------
+;------------------------------------------------
 s2867    
         LDX #$00
 b2869   LDA f3FA0,X
@@ -2179,8 +2284,16 @@ b2884   INX
         BNE b2869
         RTS 
 
-j288A   JSR s27DA
-j288D   LDA #$00
+;-------------------------------
+; j288A
+;-------------------------------
+j288A    
+        JSR s27DA
+;-------------------------------
+; j288D
+;-------------------------------
+j288D    
+        LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         STA a2A
         STA a1A
@@ -2223,11 +2336,11 @@ b28D1   DEY
         STA VICCRE   ;$900E - sound volume
         LDX #$F8
         TXS 
-        JMP j1E96
+        JMP MainGameLoop
 
-;-------------------------------
+;------------------------------------------------
 ; s28ED
-;-------------------------------
+;------------------------------------------------
 s28ED    
         LDA #$06
         STA a50
@@ -2235,7 +2348,11 @@ s28ED
         STA VICCRE   ;$900E - sound volume
 b28F6   LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-j28FB   DEC VICCRD   ;$900D - frequency of sound osc.4 (noise)
+;-------------------------------
+; j28FB
+;-------------------------------
+j28FB    
+        DEC VICCRD   ;$900D - frequency of sound osc.4 (noise)
         LDA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         CMP #$CF
         BEQ b2910
@@ -2256,15 +2373,19 @@ b2910   LDA VICCR4   ;$9004 - raster beam location (bits 7-0)
 
 b2924   LDA #$08
         STA VICCRF   ;$900F - screen colors: background, border & inverse
-j2929   DEC a50
+;-------------------------------
+; j2929
+;-------------------------------
+j2929    
+        DEC a50
         BNE b28F6
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s2933
-;-------------------------------
+;------------------------------------------------
 s2933    
         LDX #$00
 b2935   TXA 
@@ -2281,9 +2402,9 @@ b2943   PLA
         BNE b2935
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s294B
-;-------------------------------
+;------------------------------------------------
 s294B    
         LDA #>p1C08
         STA screenPtrYPPos
@@ -2308,9 +2429,9 @@ f296E   .BYTE $A5,$A7,$A7,$A7,$A7,$A7,$A7,$A7
         .BYTE $A7
 f297F   .BYTE $05,$05,$05,$05,$05,$05,$05,$05
         .BYTE $05,$05,$05,$02,$02,$02,$02
-;-------------------------------
+;------------------------------------------------
 ; s298E
-;-------------------------------
+;------------------------------------------------
 s298E    
         LDA a51
         BNE b2993
@@ -2334,9 +2455,9 @@ b2993   JSR s259D
         BNE b2993
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s29B8
-;-------------------------------
+;------------------------------------------------
 s29B8    
         INC a2C
         BNE b29BE
@@ -2345,7 +2466,11 @@ b29BE   LDY #$00
         LDA (p2C),Y
         RTS 
 
-j29C3   DEC a2B
+;-------------------------------
+; j29C3
+;-------------------------------
+j29C3    
+        DEC a2B
         BEQ b29C8
         RTS 
 
@@ -2366,9 +2491,9 @@ b29C8   JSR s259D
 
 f29E8   .BYTE $02,$03,$04,$05,$06,$08,$09,$0A
         .BYTE $0B,$03,$04,$09,$0B,$0A,$02,$08
-;-------------------------------
+;------------------------------------------------
 ; s29F8
-;-------------------------------
+;------------------------------------------------
 s29F8    
         DEC a2E
         BEQ b29FD
@@ -2394,7 +2519,11 @@ b2A11   STA screenPtrXPos
         INY 
         LDA (p2C),Y
         STA a2B
-j2A21   JSR s259D
+;-------------------------------
+; j2A21
+;-------------------------------
+j2A21    
+        JSR s259D
         AND #$07
         ADC #$09
         STA charToDraw
@@ -2423,7 +2552,11 @@ b2A4A   LDA a2C
         STA a2D
         RTS 
 
-j2A58   LDA #$01
+;-------------------------------
+; j2A58
+;-------------------------------
+j2A58    
+        LDA #$01
         STA colorToDraw
         INC f3EC0,X
         LDA f3EC0,X
@@ -2456,7 +2589,11 @@ b2A9E   CPY #$03
         BNE j2AA8
         DEC f3E40,X
         DEC f3E20,X
-j2AA8   LDA f3E20,X
+;-------------------------------
+; j2AA8
+;-------------------------------
+j2AA8    
+        LDA f3E20,X
         STA screenPtrXPos
         LDA f3E40,X
         STA screenPtrYPPos
@@ -2544,24 +2681,36 @@ b2B3F   LDA #$9B
         BEQ j2B61
         RTS 
 
-j2B53   INC f3E60,X
-j2B56   LDA f3E60,X
+;-------------------------------
+; j2B53
+;-------------------------------
+j2B53    
+        INC f3E60,X
+;-------------------------------
+; j2B56
+;-------------------------------
+j2B56    
+        LDA f3E60,X
         AND #$03
         STA f3E60,X
         JMP j2AA8
 
-j2B61   DEC f3E60,X
+;-------------------------------
+; j2B61
+;-------------------------------
+j2B61    
+        DEC f3E60,X
         JMP j2B56
 
-;-------------------------------
-; s2B67
-;-------------------------------
-s2B67    
+;------------------------------------------------
+; MaterializeCharEffect
+;------------------------------------------------
+MaterializeCharEffect    
         LDA #$20
         STA a09
 b2B6B   TXA 
         PHA 
-        JSR s2107
+        JSR AnimateTrail
         LDA a09
         CLC 
         ASL 
@@ -2581,10 +2730,10 @@ b2B7B   DEY
         DEC screenPtrYPPos
         JMP DrawCharacter
 
-;-------------------------------
-; s2B90
-;-------------------------------
-s2B90    
+;------------------------------------------------
+; PrepareToDieNewLevelEffect
+;------------------------------------------------
+PrepareToDieNewLevelEffect    
         LDA #>p0505
         STA a08
         LDA #<p0505
@@ -2596,25 +2745,27 @@ s2B90
 
 b2B9F   TXA 
         PHA 
-        LDA f2BE3,X
+        LDA txtPrepareToDie,X
         AND #$3F
         TAX 
-        JSR s2B67
+        JSR MaterializeCharEffect
         INC a07
         PLA 
         TAX 
         INX 
         CPX #$0E
         BNE b2B9F
+
         LDA #$10
         STA a07
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         JSR j21E0
         JSR s3241
         JSR s2C4A
-;-------------------------------
+
+;------------------------------------------------
 ; s2BC3
-;-------------------------------
+;------------------------------------------------
 s2BC3    
         LDA #$20
         STA charToDraw
@@ -2633,10 +2784,10 @@ b2BCF   JSR DrawCharacter
         BNE b2BCB
         RTS 
 
-f2BE3   .TEXT "PREPARE TO DIE"
-;-------------------------------
+txtPrepareToDie   .TEXT "PREPARE TO DIE"
+;------------------------------------------------
 ; s2BF1
-;-------------------------------
+;------------------------------------------------
 s2BF1    
         LDA joystickInput
         AND #$80
@@ -2659,7 +2810,7 @@ b2C06   LDX a31
 b2C15   INX 
         CPX #$0F
         BNE b2C1D
-        JMP j2C95
+        JMP PlayerKilled
 
 b2C1D   STX a31
         LDA #$A6
@@ -2678,20 +2829,24 @@ b2C27   LDX a31
 b2C3A   LDA #$A7
         STA f12C3,X
         DEC a31
-j2C41   LDA a12
+;-------------------------------
+; j2C41
+;-------------------------------
+j2C41    
+        LDA a12
         STA a2F
         LDA a17
         STA a30
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s2C4A
-;-------------------------------
+;------------------------------------------------
 s2C4A    
         LDA a07
         AND #$07
         TAX 
-        LDA f20FF,X
+        LDA ExplosionColors,X
         STA colorToDraw
         LDA a16
         STA screenPtrXPos
@@ -2724,7 +2879,11 @@ b2C83   DEY
         STA VICCRE   ;$900E - sound volume
         RTS 
 
-j2C95   JSR s27DA
+;-------------------------------
+; PlayerKilled
+;-------------------------------
+PlayerKilled    
+        JSR s27DA
         JSR s2BC3
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
@@ -2737,7 +2896,7 @@ j2C95   JSR s27DA
         BEQ b2CB5
         CMP #$02
         BNE b2CB8
-b2CB5   JMP j33E2
+b2CB5   JMP DrawGameOver
 
 b2CB8   LDX #$00
         LDA #>p0901
@@ -2746,10 +2905,10 @@ b2CB8   LDX #$00
         STA a07
 b2CC2   TXA 
         PHA 
-        LDA f2CF6,X
+        LDA txtLaserHeadsDestablized,X
         AND #$3F
         TAX 
-        JSR s2B67
+        JSR MaterializeCharEffect
         PLA 
         TAX 
         INC a07
@@ -2771,10 +2930,10 @@ b2CC2   TXA
 
 b2CF3   JMP j288D
 
-f2CF6   .TEXT "LASERHEADS DESTABILISED"
-;-------------------------------
+txtLaserHeadsDestablized   .TEXT "LASERHEADS DESTABILISED"
+;------------------------------------------------
 ; s2D0D
-;-------------------------------
+;------------------------------------------------
 s2D0D    
         LDA f3E80,X
         STA screenPtrXPos
@@ -2819,7 +2978,11 @@ f2D53   .BYTE $05,$05,$05,$05,$05,$04,$04,$04
         .BYTE $05,$05
 f2D65   .BYTE $A8,$A9,$AA,$AB,$AC,$AB,$AA
         .BYTE $A9
-j2D6D   LDA a50
+;-------------------------------
+; j2D6D
+;-------------------------------
+j2D6D    
+        LDA a50
         BEQ b2D72
         RTS 
 
@@ -2833,13 +2996,17 @@ b2D7A   INC f3E60,X
         STA f3E60,X
         LDA #$0C
         STA f3EA0,X
-j2D8A   LDA f3E60,X
+;-------------------------------
+; j2D8A
+;-------------------------------
+j2D8A    
+        LDA f3E60,X
         CMP #$07
         BNE b2D94
         JSR s2DAF
 b2D94   LDA f3E60,X
         TAY 
-        LDA f20FF,Y
+        LDA ExplosionColors,Y
         STA colorToDraw
         LDA f2D65,Y
         STA charToDraw
@@ -2849,9 +3016,9 @@ b2D94   LDA f3E60,X
         STA screenPtrYPPos
         JMP DrawCharacter
 
-;-------------------------------
+;------------------------------------------------
 ; s2DAF
-;-------------------------------
+;------------------------------------------------
 s2DAF    
         LDA f3EC0,X
         BNE b2DCB
@@ -2868,7 +3035,11 @@ s2DAF
 
 b2DCB   LDA #$00
         STA a51
-j2DCF   LDA f3E20,X
+;-------------------------------
+; j2DCF
+;-------------------------------
+j2DCF    
+        LDA f3E20,X
         STA screenPtrXPos
         LDA f3E40,X
         STA screenPtrYPPos
@@ -2897,7 +3068,7 @@ b2DF4   JSR DrawCharacter
         BEQ b2E0D
         JMP j2E36
 
-b2E0D   JMP j2C95
+b2E0D   JMP PlayerKilled
 
 b2E10   LDA #$20
         STA charToDraw
@@ -2917,7 +3088,11 @@ b2E20   JSR DrawCharacter
         BEQ b2E0D
         CMP a10
         BEQ b2E0D
-j2E36   LDA f3EA0,X
+;-------------------------------
+; j2E36
+;-------------------------------
+j2E36    
+        LDA f3EA0,X
         CMP #$01
         BEQ b2E43
         LDA #$02
@@ -2929,7 +3104,11 @@ b2E43   LDA #$00
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
         RTS 
 
-j2E4C   LDX #$00
+;-------------------------------
+; j2E4C
+;-------------------------------
+j2E4C    
+        LDX #$00
 b2E4E   LDA f3E00,X
         BEQ b2E5C
         CMP #$07
@@ -2955,7 +3134,7 @@ b2E5C   INX
         LDA #>p0A02
         STA screenPtrYPPos
         LDX #$00
-b2E84   LDA f2F4E,X
+b2E84   LDA txtAttackWaveZapped,X
         AND #$3F
         STA charToDraw
         LDA #$03
@@ -3006,7 +3185,11 @@ b2ED0   DEY
         BNE b2EBC
         PLA 
         STA a12C2
-j2EEF   LDA a12C2
+;-------------------------------
+; j2EEF
+;-------------------------------
+j2EEF    
+        LDA a12C2
         CMP #$39
         BEQ b2F03
         INC a12C2
@@ -3046,14 +3229,14 @@ b2F23   DEY
         TXS 
         JMP j1B4B
 
-;-------------------------------
+;------------------------------------------------
 ; s2F4A
-;-------------------------------
+;------------------------------------------------
 s2F4A    
         PHA 
         JMP b2D1D
 
-f2F4E   .TEXT "ATTACK WAVE 00 ZAPPED"
+txtAttackWaveZapped   .TEXT "ATTACK WAVE 00 ZAPPED"
         .BYTE $02,$04,$04,$02,$06,$04,$02,$06
         .BYTE $04,$02,$04,$02,$02,$04,$01,$09
         .BYTE $02,$01,$02,$04,$01,$00,$02,$06
@@ -3146,9 +3329,9 @@ f2F4E   .TEXT "ATTACK WAVE 00 ZAPPED"
         .BYTE $01,$04,$02,$04,$01,$03,$04,$01
         .BYTE $06,$06,$01,$09,$04,$01,$0A,$08
         .BYTE $01,$00,$FF,$FF,$FF,$FF
-;-------------------------------
+;------------------------------------------------
 ; s3241
-;-------------------------------
+;------------------------------------------------
 s3241    
         LDA #$01
         STA colorToDraw
@@ -3161,7 +3344,7 @@ b324A   LDA #>p0C03
         LDA #<p0C03
         STA screenPtrXPos
         LDX #$00
-b3254   LDA f3280,X
+b3254   LDA txtAttackSequence,X
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
@@ -3182,8 +3365,12 @@ b327A   DEX
         BNE b3268
         JMP j38EB
 
-f3280   .TEXT "ATTACK SEQUENCE 00"
-j3292   INC f3EC0,X
+txtAttackSequence   .TEXT "ATTACK SEQUENCE 00"
+;-------------------------------
+; j3292
+;-------------------------------
+j3292    
+        INC f3EC0,X
         LDA f3EC0,X
         AND #$01
         STA f3EC0,X
@@ -3219,7 +3406,7 @@ b32C6   LDA f3E20,X
         BEQ b32F0
         AND #$07
         TAY 
-        LDA f20FF,Y
+        LDA ExplosionColors,Y
         STA colorToDraw
         JMP j3304
 
@@ -3232,7 +3419,11 @@ b32F0   LDA #$00
         LDY #$03
         LDA a51
         JSR s2F4A
-j3304   JSR DrawCharacter
+;-------------------------------
+; j3304
+;-------------------------------
+j3304    
+        JSR DrawCharacter
         DEC charToDraw
         DEC screenPtrXPos
         JMP DrawCharacter
@@ -3304,7 +3495,7 @@ PaintInterstitialEffect
         LDA a52
         AND #$07
         TAX 
-        LDA f20FF,X
+        LDA ExplosionColors,X
         STA colorToDraw
         LDA a50
         STA screenPtrXPos
@@ -3356,17 +3547,19 @@ b33CC   DEY
         RTS 
 
 ;------------------------------------------------
+; DrawGameOver
 ;------------------------------------------------
-j33E2   JSR DrawScreenInterstitialEffect
+DrawGameOver
+        JSR DrawScreenInterstitialEffect
         LDA #$08
         STA a07
         STA a08
         LDX #$00
 b33ED   STX a51
-        LDA f342A,X
+        LDA txtGameOver,X
         AND #$3F
         TAX 
-        JSR s2B67
+        JSR MaterializeCharEffect
         INC a07
         LDX a51
         INX 
@@ -3379,14 +3572,22 @@ b33ED   STX a51
         JSR s2C4A
         JSR DrawScreenInterstitialEffect
         JSR s38D5
-j3414   NOP 
+;-------------------------------
+; j3414
+;-------------------------------
+j3414    
+        NOP 
 
 ;------------------------------------------------
 ; RunTitleSequence
 ;------------------------------------------------
 RunTitleSequence
         JSR DrawTitleScreen
-j3418   LDA #$00
+;-------------------------------
+; j3418
+;-------------------------------
+j3418    
+        LDA #$00
         STA a36
         STA a32
         LDX #$F8
@@ -3395,7 +3596,7 @@ j3418   LDA #$00
         JSR DrawTitleScreen2
         JMP RunTitleSequenceLoop
 
-f342A   .TEXT "GAME OVER"
+txtGameOver   .TEXT "GAME OVER"
 
 ;------------------------------------------------
 ; DrawTitleScreen2
@@ -3442,7 +3643,7 @@ b3481   LDA #$06
         LDA a51
         EOR #$07
         TAX 
-        LDA f20FF,X
+        LDA ExplosionColors,X
         STA colorToDraw
         LDA #$07
         STA a50
@@ -3479,7 +3680,11 @@ b34B0   LDA highScoreTableStorage,Y
 titleScreen2Text1   .TEXT "THE DEMONS OF HELLGATE:"
 titleScreen2Text2   .TEXT " GUARDIANS OF THE GATE "
 titleScreen2Text3   .TEXT "  PRESS FIRE TO BEGIN  "
-j3515   LDY #$00
+;-------------------------------
+; j3515
+;-------------------------------
+j3515    
+        LDY #$00
         LDX #$00
         LDA #$00
         STA a54
@@ -3510,7 +3715,11 @@ b3536   LDY #$00
         BNE b3522
         RTS 
 
-j3546   PLA 
+;-------------------------------
+; j3546
+;-------------------------------
+j3546    
+        PLA 
         STA a53
         CLC 
         ADC #$0A
@@ -3588,9 +3797,9 @@ b359A   JSR DrawTitleScreen2
         STA highScoreTableStorage,X
         RTS 
 
-;-------------------------------
+;------------------------------------------------
 ; s35E3
-;-------------------------------
+;------------------------------------------------
 s35E3    
         LDA a55
         AND #$1F
@@ -3625,9 +3834,9 @@ b3615   LDA a55
         JSR DrawCharacter
         INC screenPtrXPos
         LDX #$00
-;-------------------------------
+;------------------------------------------------
 ; s3628
-;-------------------------------
+;------------------------------------------------
 s3628    
         LDY #$00
 b362A   DEY 
@@ -3869,7 +4078,11 @@ b380A   CMP #$2F
         AND #$01
         STA a37
 
-j3816   JSR DrawTitleScreen2
+;-------------------------------
+; j3816
+;-------------------------------
+j3816    
+        JSR DrawTitleScreen2
 b3819   LDA aC5
         CMP #$40
         BNE b3819
@@ -3888,9 +4101,9 @@ b3822   LDA joystickInput
         STA a36
 b3838   JMP j1B2E
 
-;-------------------------------
+;------------------------------------------------
 ; s383B
-;-------------------------------
+;------------------------------------------------
 s383B    
         NOP 
         LDX #$07
@@ -3899,6 +4112,7 @@ b3840   STA f96E6,X
         STA f96D4,X
         DEX 
         BNE b3840
+
         STX a1A
         LDA a23
         CMP #$D5
@@ -3909,7 +4123,12 @@ b3840   STA f96E6,X
 
 b3858   LDA #$D5
         STA a23
-j385C   LDA a12C2
+
+;-------------------------------
+; j385C
+;-------------------------------
+j385C    
+        LDA a12C2
         PHA 
         LDA a3A
         STA a12C2
@@ -3966,9 +4185,9 @@ b38BB   RTS
 
 entryPlayersText   .TEXT "ENTRY LEVEL:0   PLAYERS:1"
 
-;-------------------------------
+;------------------------------------------------
 ; s38D5
-;-------------------------------
+;------------------------------------------------
 s38D5    
         LDA a37
         BNE b38DC
@@ -3980,7 +4199,11 @@ b38DC   JSR s383B
         JSR j3515
         JMP s383B
 
-j38EB   LDX #$00
+;-------------------------------
+; j38EB
+;-------------------------------
+j38EB    
+        LDX #$00
         LDA #>p0A07
         STA screenPtrYPPos
         LDA #<p0A07
@@ -3989,7 +4212,7 @@ j38EB   LDX #$00
         BNE b38FA
         RTS 
 
-b38FA   LDA f3927,X
+b38FA   LDA txtPlayerOneTwo,X
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
@@ -4004,7 +4227,7 @@ b38FA   LDA f3927,X
         INX 
         INX 
 b3914   LDY #$03
-b3916   LDA f3927,X
+b3916   LDA txtPlayerOneTwo,X
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
@@ -4014,7 +4237,7 @@ b3916   LDA f3927,X
         BNE b3916
         RTS 
 
-f3927   .TEXT "PLAYER ONETWO"
+txtPlayerOneTwo   .TEXT "PLAYER ONETWO"
         .BYTE $32,$20,$20,$2E,$BC,$53,$42,$42
         .BYTE $4D,$20,$20,$2E,$C9,$53,$42,$42
         .BYTE $4F,$4E,$20,$2E,$BB,$53,$42,$49
