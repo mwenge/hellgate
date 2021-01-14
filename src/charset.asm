@@ -1068,7 +1068,7 @@ p1671=*+$01
                                         ; 01000100    *   *
 
 
-bottomShipFull=$61
+bottomLaserheadFull=$61
 .BYTE $18,$18,$BD,$BD,$FF,$FF,$E7,$C3   ;.BYTE $18,$18,$BD,$BD,$FF,$FF,$E7,$C3
                                         ; CHARACTER $61
                                         ; 00011000      **
@@ -1079,7 +1079,7 @@ bottomShipFull=$61
                                         ; 11111111   ********
                                         ; 11100111   ***  ***
                                         ; 11000011   **    **
-bottomShipLeftHalf=$62
+bottomLaserheadLeftHalf=$62
 .BYTE $01,$01,$0B,$0B,$0F,$0F,$0E,$0C   ;.BYTE $01,$01,$0B,$0B,$0F,$0F,$0E,$0C
                                         ; CHARACTER $62
                                         ; 00000001          *
@@ -1091,7 +1091,7 @@ bottomShipLeftHalf=$62
                                         ; 00001110       ***
                                         ; 00001100       **
 
-bottomShipRightHalf=$63
+bottomLaserheadRightHalf=$63
 .BYTE $80,$80,$D0,$D0,$F0,$F0,$70,$30   ;.BYTE $80,$80,$D0,$D0,$F0,$F0,$70,$30
                                         ; CHARACTER $63
                                         ; 10000000   *
@@ -1103,7 +1103,7 @@ bottomShipRightHalf=$63
                                         ; 01110000    ***
                                         ; 00110000     **
 
-topShipFull=$64
+topLaserheadFull=$64
 .BYTE $C3,$E7,$FF,$FF,$BD,$BD,$18,$18   ;.BYTE $C3,$E7,$FF,$FF,$BD,$BD,$18,$18
                                         ; CHARACTER $64
                                         ; 11000011   **    **
@@ -1115,7 +1115,7 @@ topShipFull=$64
                                         ; 00011000      **
                                         ; 00011000      **
 
-topShipRightHalf=$65
+topLaserheadRightHalf=$65
 .BYTE $0C,$0E,$0F,$0F,$0B,$0B,$01,$01   ;.BYTE $0C,$0E,$0F,$0F,$0B,$0B,$01,$01
                                         ; CHARACTER $65
                                         ; 00001100       **
@@ -1127,7 +1127,7 @@ topShipRightHalf=$65
                                         ; 00000001          *
                                         ; 00000001          *
 
-topShipLeftHalf=$66
+topLaserheadLeftHalf=$66
 .BYTE $30,$70,$F0,$F0,$D0,$D0,$80,$80   ;.BYTE $30,$70,$F0,$F0,$D0,$D0,$80,$80
                                         ; CHARACTER $66
                                         ; 00110000     **
@@ -1139,7 +1139,7 @@ topShipLeftHalf=$66
                                         ; 10000000   *
                                         ; 10000000   *
 
-leftShipFull=$67
+leftLaserheadFull=$67
 .BYTE $FC,$F0,$7C,$3F,$3F,$7C,$F0,$FC   ;.BYTE $FC,$F0,$7C,$3F,$3F,$7C,$F0,$FC
                                         ; CHARACTER $67
                                         ; 11111100   ******
@@ -1151,7 +1151,7 @@ leftShipFull=$67
                                         ; 11110000   ****
                                         ; 11111100   ******
 
-leftShipTopHalf=$68
+leftLaserheadTopHalf=$68
 .BYTE $00,$00,$00,$00,$FC,$F0,$7C,$3F   ;.BYTE $00,$00,$00,$00,$FC,$F0,$7C,$3F
                                         ; CHARACTER $68
                                         ; 00000000
@@ -1163,7 +1163,7 @@ leftShipTopHalf=$68
                                         ; 01111100    *****
                                         ; 00111111     ******
 
-leftShipBottomHalf=$69
+leftLaserheadBottomHalf=$69
 .BYTE $3F,$7C,$F0,$FC,$00,$00,$00,$00   ;.BYTE $3F,$7C,$F0,$FC,$00,$00,$00,$00
                                         ; CHARACTER $69
                                         ; 00111111     ******
@@ -1175,7 +1175,7 @@ leftShipBottomHalf=$69
                                         ; 00000000
                                         ; 00000000
 
-rightShipFull=$6A
+rightLaserheadFull=$6A
 .BYTE $3F,$0F,$3E,$FC,$FC,$3E,$0F,$3F   ;.BYTE $3F,$0F,$3E,$FC,$FC,$3E,$0F,$3F
                                         ; CHARACTER $6a
                                         ; 00111111     ******
@@ -1187,7 +1187,7 @@ rightShipFull=$6A
                                         ; 00001111       ****
                                         ; 00111111     ******
 
-rightShipTopHalf=$6B
+rightLaserheadTopHalf=$6B
 .BYTE $00,$00,$00,$00,$3F,$0F,$3E,$FC   ;.BYTE $00,$00,$00,$00,$3F,$0F,$3E,$FC
                                         ; CHARACTER $6b
                                         ; 00000000
@@ -1199,7 +1199,7 @@ rightShipTopHalf=$6B
                                         ; 00111110     *****
                                         ; 11111100   ******
 
-rightShipBottomHalf=$6C
+rightLaserheadBottomHalf=$6C
 .BYTE $FC,$3E,$0F,$3F,$00,$00,$00,$00   ;.BYTE $FC,$3E,$0F,$3F,$00,$00,$00,$00
                                         ; CHARACTER $6c
                                         ; 11111100   ******

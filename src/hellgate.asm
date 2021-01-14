@@ -1,9 +1,9 @@
 ;
-; **** ZP FIELDS **** 
+; **** ZP FIELDS ****
 ;
 f3E = $3E
 ;
-; **** ZP ABSOLUTE ADRESSES **** 
+; **** ZP ABSOLUTE ADRESSES ****
 ;
 zpLo = $00
 zpHi = $01
@@ -57,7 +57,7 @@ a33 = $33
 a34 = $34
 a35 = $35
 a36 = $36
-a37 = $37
+currentPlayer = $37
 a38 = $38
 shipsLeft = $39
 zapsLeft = $3A
@@ -69,13 +69,10 @@ a54 = $54
 a55 = $55
 aC5 = $C5
 ;
-; **** ZP POINTERS **** 
+; **** ZP POINTERS ****
 ;
-p0E = $0E
-p23 = $23
-p2C = $2C
 ;
-; **** FIELDS **** 
+; **** FIELDS ****
 ;
 SCREEN_PTR_LO = $0340
 SCREEN_PTR_HI = $0360
@@ -84,12 +81,12 @@ highScoreTableStorage = $3D00
 f3D01 = $3D01
 f3D02 = $3D02
 f3E00 = $3E00
-f3E20 = $3E20
-f3E40 = $3E40
+enemyXPosArray = $3E20
+enemyYPosArray = $3E40
 f3E60 = $3E60
 f3E80 = $3E80
 f3EA0 = $3EA0
-f3EC0 = $3EC0
+enemyCharArray = $3EC0
 f3EE0 = $3EE0
 bulletColorArray = $3FA0
 bulletGroupArray = $3FB0
@@ -105,17 +102,16 @@ f96E6 = $96E6
 fC000 = $C000
 fCACB = $CACB
 ;
-; **** ABSOLUTE ADRESSES **** 
+; **** ABSOLUTE ADRESSES ****
 ;
 screenPtrXPos91 = $0291
-screenPtrYPPos15 = $0315
 WaitCtr2 = $1108
 WaitCtr1 = $1109
 a113F = $113F
 a1140 = $1140
 a96D3 = $96D3
 ;
-; **** POINTERS **** 
+; **** POINTERS ****
 ;
 p02 = $0002
 p0B = $000B
@@ -139,25 +135,42 @@ p0C13 = $0C13
 p0E02 = $0E02
 p0E13 = $0E13
 
-SCREEN_RAM = $1000
+SCREEN_RAM      = $1000
 dsplyEntryLevel = SCREEN_RAM + $264
-dsplyPlayers = SCREEN_RAM + $270
-dsplyZapsLeft = SCREEN_RAM + $2C2
-dsplyShipsLeft = SCREEN_RAM + $2D4
-dsplyEnergyBar = SCREEN_RAM + $2C3
-p12D5 = SCREEN_RAM + $2D5
+dsplyPlayers    = SCREEN_RAM + $270
+dsplyZapsLeft   = SCREEN_RAM + $2C2
+dsplyLaserheadsLeft  = SCREEN_RAM + $2D4
+dsplyEnergyBar  = SCREEN_RAM + $2C3
+p12D5           = SCREEN_RAM + $2D5
 
 p4C0B = $4C0B
 p6301 = $6301
 p6D1B = $6D1B
 p7519 = $7519
 
+BLACK    = $00
+WHITE    = $01
+RED      = $02
+CYAN     = $03
+PURPLE   = $04
+GREEN    = $05
+BLUE     = $06
+YELLOW   = $07
+ORANGE   = $08
+LTORANGE = $09
+PINK     = $0A
+LTCYAN   = $0B
+LTPURPLE = $0C
+LTGREEN  = $0D
+LTBLUE   = $0E
+LTYELLOW = $0F
+
 ;
-; **** EXTERNAL JUMPS **** 
+; **** EXTERNAL JUMPS ****
 ;
 eDD8E = $DD8E
 ;
-; **** PREDEFINED LABELS **** 
+; **** PREDEFINED LABELS ****
 ;
 RAM_CINV = $0314
 VICCR0 = $9000
@@ -180,84 +193,19 @@ ROM_IRQ = $EABF
 
         * = $1201
 
-        .BYTE $0B,$12,$0A,$00,$9E,$36,$36,$35
-        .BYTE $36,$00,$00,$00
-        STY f3E,X
-        CLV 
-        SBC fCACB,X
-        .BYTE $C2,$45 ;NOP #$45
-        JMP eDD8E
+;------------------------------------------------
+; SYS 6656 (LaunchGame $1A00) (Launch)
+; Jumps to LaunchGame
+;------------------------------------------------
+        .BYTE $0B,$12,$0A,$00,$9E,$36,$36,$35,$36,$00,$00,$00
 
-        .BYTE $80,$E9,$9E,$AE,$CB,$CC,$8F,$8E
-        .BYTE $C4,$E5,$C8,$C8,$C6,$CC,$8D,$CF
-        .BYTE $C6,$E7,$C9,$C4,$81,$86,$CD,$CC
-        .BYTE $B5,$7F,$AE,$7F,$FF,$B6,$B9,$33
-        .BYTE $3E,$BF,$2F,$05,$3A,$EA,$33,$6C
-        .BYTE $38,$FE,$38,$98,$1B,$B6,$16,$9F
-        .BYTE $B5,$7C,$7C,$79,$BC,$AC,$80,$9D
-        .BYTE $CC,$DF,$DA,$CD,$4C,$CF,$DC,$E1
-        .BYTE $9C,$FF,$9C,$CC,$EA,$CC,$C4,$44
-        .BYTE $DC,$CF,$6A,$C8
-        .BYTE $CC,$C6,$8A,$D8,$CA,$C6,$CD,$CC
-        .BYTE $C8,$CA,$C9,$C4
-        .BYTE $3C,$AE,$3B,$3C,$36,$D5,$93,$6A
-        .BYTE $FF,$BC,$4F,$AA,$3E,$08,$79,$D9
-        .BYTE $38,$73,$37,$5C,$B5,$D5,$9A,$9D
-        .BYTE $9F,$31,$D4,$3D,$91,$3C,$7C,$FC
-        .BYTE $CE,$DC,$CC,$9C,$CC,$CF,$C8,$9F
-        .BYTE $C6,$D4,$CA,$C5,$CE,$DF,$CC,$44
-        .BYTE $CD,$C5,$CD,$44,$CA,$CB,$AE,$DB
-        .BYTE $5C,$D8,$49,$C0,$B8,$C4,$CC,$CC
-        .BYTE $9A,$3C,$A2,$9D,$7B,$B9,$30,$9C
-        .BYTE $33,$87,$3D,$DC,$A2,$14,$70,$B5
-        .BYTE $BE,$3E
-        .BYTE $7E
-        .BYTE $9C,$1E,$71,$3A,$5F,$3C,$1C,$3C
-        .BYTE $B8,$5C,$BA,$98,$94,$D4,$59,$49
-        .BYTE $ED
-        .BYTE $C4
-        .BYTE $CD,$CE,$E5,$C4,$4D,$C1,$4D,$CB
-        .BYTE $D4,$84,$D1,$EC,$C2,$04,$E2,$CE
-        .BYTE $CB,$4E,$CC,$C8,$CE,$C6,$CE,$C4
-        .BYTE $85,$C0,$D4,$FE,$15,$5F,$F9,$B4
-        .BYTE $7E,$9D,$1E,$7A,$51,$30,$1D,$5F
-        .BYTE $4D,$59,$7A
-        .BYTE $3A,$BC,$1F,$0E,$BF,$3C,$2C,$BE
-        .BYTE $AE,$1C,$B8,$7C,$37,$4C,$9C,$CC
-        .BYTE $08,$D9,$CE,$EC,$DC,$CD,$C9,$41
-        .BYTE $CC,$CC,$E7,$DC,$6C,$9F,$4C,$D4
-        .BYTE $CC,$CB,$D7,$C8,$DF,$CF,$CF,$CF
-        .BYTE $C6,$D5,$CC,$CA,$CF,$4C,$CC,$CC
-        .BYTE $34,$1E,$11,$DE,$33,$BC,$F9,$0A
-        .BYTE $F3,$BC,$3E,$1A,$3E,$F1,$31,$FE
-        .BYTE $3E,$9F,$9B,$3D,$77,$BB,$3C,$7E
-        .BYTE $98,$F9,$3A,$ED,$3E,$5D,$9C,$DE
-        .BYTE $F8,$CD,$4C,$CD,$E5,$CB,$CE,$C6
-        .BYTE $CF,$C6,$F4,$DD,$CE,$9C,$ED,$C2
-        .BYTE $4C,$C7,$C5,$4E,$CA,$CB,$C0,$CE
-        .BYTE $D8,$CD,$CC,$D7,$C5,$CE,$CE,$9C
-        .BYTE $BE,$7E,$F6,$E6,$39,$B9,$17,$59
-        .BYTE $BB,$7D,$30,$FD,$37,$BD,$BB,$15
-        .BYTE $3C,$BD,$79,$3D,$34,$BD,$3F,$79
-        .BYTE $39,$4D,$79,$66,$FE,$6F,$9D,$9C
-        .BYTE $CC,$53,$C4,$5E,$DE,$4C,$CC,$92
-        .BYTE $9E,$DE,$DF,$9D,$D6,$C0,$C4,$CD
-        .BYTE $CD,$C7,$DF,$CE,$CF,$4C,$C0,$D6
-        .BYTE $C8,$C7,$75,$C3,$DF,$CF,$C0,$CC
-        .BYTE $1B,$79,$79,$9D,$BD,$1D,$5B,$34
-        .BYTE $02,$FD,$27,$EC,$35,$D6,$79,$1C
-        .BYTE $BF,$B9,$BD,$EC,$1E,$1E,$7B,$FA
-        .BYTE $BF,$DD,$9C,$94,$B5,$5F,$3F,$9C
-        .BYTE $C5,$CD,$9C,$CD,$DD,$C9,$D8,$4A
-        .BYTE $D0,$D8,$FC,$DA,$DA,$88,$CC,$C4
-        .BYTE $CC,$D5,$DF,$CD,$C6,$C8,$CD,$0F
-        .BYTE $CC,$C4,$CF,$CD,$CC,$CF,$CC,$8E
-        .BYTE $7E,$9C,$6F,$8C,$B3,$DF,$36,$18
-        .BYTE $3F,$D7,$72,$FE,$30,$B6,$FF,$9D
-
+.include "padding.asm"
 .include "charset.asm"
 
+        ; Redundant data
         .BYTE $00,$00,$00,$00,$00,$00,$00,$C1
+
+LaunchGame
         LDA #$02
 p1A02   STA VIA1IER  ;$911E - interrupt enable register (IER)
         LDA #$80
@@ -280,16 +228,16 @@ b1A17   LDA zpLo
         LDA zpHi
         STA SCREEN_PTR_HI,X
         LDA zpLo
-        CLC 
+        CLC
         ADC #$19
         STA zpLo
         LDA zpHi
         ADC #$00
         STA zpHi
-        INX 
+        INX
         CPX #$20
         BNE b1A17
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; Screen_GetPtr
@@ -301,7 +249,7 @@ Screen_GetPtr
         STA zpLo
         LDA SCREEN_PTR_HI,X
         STA zpHi
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; GetCharAtCurrentPos
@@ -309,7 +257,7 @@ Screen_GetPtr
 GetCharAtCurrentPos
         JSR Screen_GetPtr
         LDA (zpLo),Y
-b1A48   RTS 
+b1A48   RTS
 
 ;------------------------------------------------
 ; DrawCharacter
@@ -318,24 +266,24 @@ DrawCharacter
         LDA screenPtrXPos
         CMP #$28
         BPL b1A48
-        TXA 
-        PHA 
-        TYA 
-        PHA 
+        TXA
+        PHA
+        TYA
+        PHA
         JSR Screen_GetPtr
         LDA charToDraw
         STA (zpLo),Y
         LDA zpHi
-        CLC 
+        CLC
         ADC #$84
         STA zpHi
         LDA colorToDraw
         STA (zpLo),Y
-        PLA 
-        TAY 
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAY
+        PLA
+        TAX
+        RTS
 
 ;------------------------------------------------
 ; ClearScreen
@@ -346,9 +294,9 @@ b1A6C   LDA #$20
         STA SCREEN_RAM + $100,X
         STA SCREEN_RAM + $200,X
         STA SCREEN_RAM + $300,X
-        DEX 
+        DEX
         BNE b1A6C
-        RTS 
+        RTS
 
 a1A7E          .TEXT "0"
 a1A7F          .TEXT $08
@@ -374,7 +322,7 @@ InitializeAudioAndVideo
         STX a36
 b1AE8   LDA highScoreTable,X
         STA highScoreTableStorage,X
-        INX 
+        INX
         CPX #$50
         BNE b1AE8
 
@@ -387,16 +335,16 @@ b1AE8   LDA highScoreTable,X
 
         ; Bits 0 to 3 (i.e. the D in $CD) determine which address character
         ; set is stored at. So D points to $1400. The maps is as follows:
-        ;Bits    Address  
-        ;0000    8000 
-        ;0001    8400 
-        ;0010    8800 
-        ;0011    8C00 
-        ;1000    0000 
-        ;1100    1000 
-        ;1101    1400 
-        ;1110    1800 
-        ;1111    1C00 
+        ;Bits    Address
+        ;0000    8000
+        ;0001    8400
+        ;0010    8800
+        ;0011    8C00
+        ;1000    0000
+        ;1100    1000
+        ;1101    1400
+        ;1110    1800
+        ;1111    1C00
         LDA #$CD ; $D translates as charcters starting at $1400
         STA VICCR5   ;$9005 - screen map & character map address
 
@@ -406,25 +354,28 @@ b1AE8   LDA highScoreTable,X
         STA VICCR3   ;$9003 - number of lines, part of raster location (bit 8)
         LDA #$0A
         STA VICCR0   ;$9000 - left edge of picture & interlace switch
-        SEI 
-        LDA #<p2218
+
+        ; Set the IRQ interrupt handlet to InterruptHandler
+        SEI
+        LDA #<InterruptHandler
         STA RAM_CINV
-        LDA #>p2218
-        STA screenPtrYPPos15
-        CLI 
+        LDA #>InterruptHandler
+        STA RAM_CINV + $01
+        CLI
+
         LDA #$18
         STA VICCR1   ;$9001 - vertical picture origin
         LDA #$00
         STA a32
-        STA a37
+        STA currentPlayer
         JMP RunTitleSequence
 
 ;-------------------------------
-; j1B2E
+; SetupGameScreen
 ;-------------------------------
-j1B2E    
+SetupGameScreen
         JSR DrawScreenInterstitialEffect
-        JSR DrawScoreStrapLine
+        JSR DrawLaserBasesAndStrapLine
         LDA a36
         BEQ b1B3F
         JSR UpdateScrPtrYPosWithX
@@ -440,7 +391,7 @@ b1B3F   LDA #$33
 ;-------------------------------
 ; EnterNextLevel
 ;-------------------------------
-EnterNextLevel    
+EnterNextLevel
 
         LDA #$06
         STA a1E
@@ -452,11 +403,11 @@ EnterNextLevel
         STA a21
         STA a22
         STA a20
-          
+
         LDA #$00
         LDX #$00
 b1B63   STA bulletColorArray,X
-        INX 
+        INX
         CPX #$10
         BNE b1B63
         STA joystickInput
@@ -469,11 +420,11 @@ b1B63   STA bulletColorArray,X
         STA a2D
         LDA a32
         BEQ b1B8B
-        TAX 
+        TAX
 
 b1B80   JSR WasteSomeCycles
         BNE b1B80
-        DEX 
+        DEX
         BNE b1B80
         JSR WasteSomeCycles
 
@@ -482,35 +433,39 @@ b1B8B   JSR PrepareToDieNewLevelEffect
         JMP MainGameLoop
 
 ;------------------------------------------------
-; DrawScoreStrapLine
+; DrawLaserBasesAndStrapLine
 ;------------------------------------------------
-DrawScoreStrapLine
+DrawLaserBasesAndStrapLine
+
+        ; Draw Horizontal top & bottom bases
         LDA #<p02
         STA screenPtrXPos
 b1B98   LDA #>p02
         STA screenPtrYPPos
-        LDA #>p066E
+        LDA #$06
         STA colorToDraw
-        LDA #<p066E
+        LDA #$6E ; Horizontal Base
         STA charToDraw
         JSR DrawCharacter
-        LDA #>p6D1B
+        LDA #$6D ; Horizontal Base
         STA charToDraw
-        LDA #<p6D1B
+        LDA #$1B
         STA screenPtrYPPos
         JSR DrawCharacter
         INC screenPtrXPos
         LDA screenPtrXPos
         CMP #$17
         BNE b1B98
+
+        ; Draw vertical left & right bases
         LDA #>p0200
         STA screenPtrYPPos
 b1BBE   LDA #<p0200
         STA screenPtrXPos
-        LDA #$70
+        LDA #$70 ; Vertical Base
         STA charToDraw
         JSR DrawCharacter
-        DEC charToDraw
+        DEC charToDraw ; Vertical Base
         LDA #$18
         STA screenPtrXPos
         JSR DrawCharacter
@@ -518,6 +473,8 @@ b1BBE   LDA #<p0200
         LDA screenPtrYPPos
         CMP #$1A
         BNE b1BBE
+
+        ; Draw straplines
         LDA #>p1C00
         STA screenPtrYPPos
         LDA #<p1C00
@@ -525,36 +482,37 @@ b1BBE   LDA #<p0200
         LDA a36
         BNE b1C0B
         LDX #$00
-b1BE8   LDA scoreLineColors,X
+b1BE8   LDA scoreLineText1,X
         AND #$BF
         STA charToDraw
         LDA #$07
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrYPPos
-        LDA scoreLineText,X
+        LDA scoreLineText2,X
         AND #$3F
         STA charToDraw
 p1C00   =*+$01
         JSR DrawCharacter
         DEC screenPtrYPPos
         INC screenPtrXPos
-        INX 
+        INX
 p1C08   =*+$01
         CPX #$19
         BNE b1BE8
 b1C0B   JSR ResetEnergyBar
-        JMP j1C43
+        JMP InitializeGameVariables
 
-scoreLineColors .BYTE $9D,$9E,$9F,$A0,$A1,$A2,$33,$20
-                .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-                .BYTE $20,$20,$20,$20,$20,$20,$20,$A3
-                .BYTE $34
-scoreLineText   .TEXT "0000000 HELL$GATE 0000000"
+scoreLineText1 .BYTE $9D,$9E,$9F,$A0,$A1,$A2,$33,$20
+               .BYTE $20,$20,$20,$20,$20,$20,$20,$20
+               .BYTE $20,$20,$20,$20,$20,$20,$20,$A3
+               .BYTE $34
+scoreLineText2 .TEXT "0000000 HELL$GATE 0000000"
+
 ;-------------------------------
-; j1C43
+; InitializeGameVariables
 ;-------------------------------
-j1C43    
+InitializeGameVariables
         LDA #$01
         STA a11
         STA a16
@@ -574,36 +532,36 @@ j1C43
         STA a18
         STA a19
         STA a1A
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; s1C6A
 ;------------------------------------------------
-s1C6A    
+s1C6A
         LDA #$A0
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-        JSR s2187
+        JSR PerformAlienAnimation
 
         LDX #$00
         LDA #$00
 b1C76   STA f3E00,X
-        INX 
+        INX
         BNE b1C76
 
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-        JSR MoveShips
+        JSR MoveLaserheads
         JMP PlayNewLevelSounds
 
 ;------------------------------------------------
-; MoveShips
+; MoveLaserheads
 ;------------------------------------------------
-MoveShips    
+MoveLaserheads
         LDA a18
         BEQ b1C8E
-        JMP LeftRightShipFirstFrame
+        JMP LeftRightLaserheadFirstFrame
 
-b1C8E   LDA #leftShipFull
+b1C8E   LDA #leftLaserheadFull
         JSR UpdateCharToDraw
         LDA a16
         STA screenPtrXPos
@@ -611,9 +569,9 @@ b1C8E   LDA #leftShipFull
         STA colorToDraw
         LDA a17
         STA screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
 
-        LDA #rightShipFull
+        LDA #rightLaserheadFull
         JSR UpdateCharToDraw
         LDA a14
         STA screenPtrXPos
@@ -621,27 +579,27 @@ b1C8E   LDA #leftShipFull
         STA colorToDraw
         LDA a15
         STA screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
 
-        JMP MoveTopBottomShips
-        ; Returns from MoveShip
+        JMP MoveTopBottomLaserheads
+        ; Returns from MoveLaserhead
 
 ;------------------------------------------------
 ; UpdateCharToDraw
 ;------------------------------------------------
-UpdateCharToDraw    
+UpdateCharToDraw
         LDY a1A
         CPY #$01
         BNE b1CC1
         LDA #$20
 b1CC1   STA charToDraw
-        RTS 
+        RTS
 
 ;-------------------------------
-; LeftRightShipFirstFrame
+; LeftRightLaserheadFirstFrame
 ;-------------------------------
-LeftRightShipFirstFrame    
-        LDA #leftShipTopHalf
+LeftRightLaserheadFirstFrame
+        LDA #leftLaserheadTopHalf
         JSR UpdateCharToDraw
         LDA #$07
         STA colorToDraw
@@ -649,13 +607,13 @@ LeftRightShipFirstFrame
         STA screenPtrXPos
         LDA a17
         STA screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
         INC charToDraw
         LDA charToDraw
         JSR UpdateCharToDraw
         INC screenPtrYPPos
-        JSR MoveShip
-        LDA #rightShipTopHalf
+        JSR MoveLaserhead
+        LDA #rightLaserheadTopHalf
         JSR UpdateCharToDraw
         LDA #$04
         STA colorToDraw
@@ -663,22 +621,22 @@ LeftRightShipFirstFrame
         STA screenPtrXPos
         LDA a15
         STA screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
         INC charToDraw
         LDA charToDraw
         JSR UpdateCharToDraw
         INC screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
 
 ;-------------------------------
-; MoveTopBottomShips
+; MoveTopBottomLaserheads
 ;-------------------------------
-MoveTopBottomShips    
+MoveTopBottomLaserheads
         LDA a19
         BEQ b1D0B
         JMP BottomTopFirstFrame
 
-b1D0B   LDA #bottomShipFull
+b1D0B   LDA #bottomLaserheadFull
         JSR UpdateCharToDraw
         LDA #$07
         STA colorToDraw
@@ -686,8 +644,8 @@ b1D0B   LDA #bottomShipFull
         STA screenPtrXPos
         LDA a13
         STA screenPtrYPPos
-        JSR MoveShip
-        LDA #topShipFull
+        JSR MoveLaserhead
+        LDA #topLaserheadFull
         JSR UpdateCharToDraw
         LDA #$04
         STA colorToDraw
@@ -695,14 +653,14 @@ b1D0B   LDA #bottomShipFull
         STA screenPtrXPos
         LDA a11
         STA screenPtrYPPos
-        JMP MoveShip
+        JMP MoveLaserhead
         ; Returns
 
 ;-------------------------------
 ; BottomTopFirstFrame
 ;-------------------------------
-BottomTopFirstFrame    
-        LDA #bottomShipLeftHalf
+BottomTopFirstFrame
+        LDA #bottomLaserheadLeftHalf
         JSR UpdateCharToDraw
         LDA #$07
         STA colorToDraw
@@ -710,32 +668,32 @@ BottomTopFirstFrame
         STA screenPtrXPos
         LDA a13
         STA screenPtrYPPos
-        JSR MoveShip
+        JSR MoveLaserhead
         INC charToDraw
         LDA charToDraw
         JSR UpdateCharToDraw
         INC screenPtrXPos
-        JSR MoveShip
+        JSR MoveLaserhead
         LDA #$04
         STA colorToDraw
         LDA a10
         STA screenPtrXPos
         LDA a11
         STA screenPtrYPPos
-        LDA #topShipRightHalf
+        LDA #topLaserheadRightHalf
         JSR UpdateCharToDraw
-        JSR MoveShip
+        JSR MoveLaserhead
         INC charToDraw
         LDA charToDraw
         JSR UpdateCharToDraw
         INC screenPtrXPos
-        JMP MoveShip
+        JMP MoveLaserhead
 
 ;------------------------------------------------
 ; GetJoystickInput
 ;------------------------------------------------
 GetJoystickInput
-        SEI 
+        SEI
         LDX #$7F
         STX VIA2DDRB ;$9122 - data direction register for port b
 
@@ -747,24 +705,24 @@ b1D79   LDY VIA2PB   ;$9120 - port b I/O register
         STX VIA2DDRB ;$9122 - data direction register for port b
         LDX #$F7
         STX VIA2PB   ;$9120 - port b I/O register
-        CLI 
+        CLI
 
 b1D8C   LDA VIA1PA2  ;$911F - mirror of VIA1PA1 (CA1 & CA2 unaffected)
         CMP VIA1PA2  ;$911F - mirror of VIA1PA1 (CA1 & CA2 unaffected)
         BNE b1D8C
 
-        PHA 
+        PHA
         AND #$1C
-        LSR 
+        LSR
         CPY #$80
         BCC b1D9E
         ORA #$10
-b1D9E   TAY 
-        PLA 
+b1D9E   TAY
+        PLA
         AND #$20
         CMP #$20
-        TYA 
-        ROR 
+        TYA
+        ROR
         EOR #$8F
         STA joystickInput
         LDA a36
@@ -776,20 +734,20 @@ b1D9E   TAY
 
 b1DB7   LDA #$85
         STA joystickInput
-b1DBB   RTS 
+b1DBB   RTS
 
 ;------------------------------------------------
-; MoveShipsDown
+; MoveLaserheadsDown
 ;------------------------------------------------
-MoveShipsDown 
+MoveLaserheadsDown
         LDA a17
         CMP #$19
         BNE b1DCC
         LDA a17
-        PHA 
+        PHA
         LDA a15
         STA a17
-        PLA 
+        PLA
         STA a15
 b1DCC   INC a18
         LDA a18
@@ -800,23 +758,23 @@ b1DCC   INC a18
 b1DD8   LDA a18
         BEQ b1DDF
         DEC a15
-        RTS 
+        RTS
 
 b1DDF   INC a17
-        RTS 
+        RTS
 
 ;------------------------------------------------
-; MoveShipsUp
+; MoveLaserheadsUp
 ;------------------------------------------------
-MoveShipsUp    
+MoveLaserheadsUp
         LDA a17
         CMP #$02
         BNE b1DF2
         LDA a17
-        PHA 
+        PHA
         LDA a15
         STA a17
-        PLA 
+        PLA
         STA a15
 b1DF2   DEC a18
         LDA a18
@@ -827,23 +785,23 @@ b1DF2   DEC a18
 b1DFE   LDA a18
         BEQ b1E05
         DEC a17
-        RTS 
+        RTS
 
 b1E05   INC a15
-        RTS 
+        RTS
 
 ;------------------------------------------------
-; MoveShipsRight
+; MoveLaserheadsRight
 ;------------------------------------------------
-MoveShipsRight    
+MoveLaserheadsRight
         LDA a12
         CMP #$16
         BNE b1E18
         LDA a12
-        PHA 
+        PHA
         LDA a10
         STA a12
-        PLA 
+        PLA
         STA a10
 b1E18   INC a19
         LDA a19
@@ -851,23 +809,23 @@ b1E18   INC a19
         STA a19
         BEQ b1E25
         DEC a10
-        RTS 
+        RTS
 
 b1E25   INC a12
-        RTS 
+        RTS
 
 ;------------------------------------------------
-; MoveShipsLeft
+; MoveLaserheadsLeft
 ;------------------------------------------------
-MoveShipsLeft    
+MoveLaserheadsLeft
         LDA a12
         CMP #$02
         BNE b1E38
         LDA a12
-        PHA 
+        PHA
         LDA a10
         STA a12
-        PLA 
+        PLA
         STA a10
 b1E38   INC a19
         LDA a19
@@ -875,16 +833,16 @@ b1E38   INC a19
         STA a19
         BEQ b1E45
         DEC a12
-        RTS 
+        RTS
 
 b1E45   INC a10
 
 ;------------------------------------------------
 ; CheckJoystickInput
 ;------------------------------------------------
-b1E47   RTS 
+b1E47   RTS
 
-CheckJoystickInput    
+CheckJoystickInput
 
         DEC a1C
         BNE b1E47
@@ -894,7 +852,7 @@ CheckJoystickInput
 
         LDA #$01
         STA a2A
-        JSR MoveShips
+        JSR MoveLaserheads
         DEC a2A
 
         JSR GetJoystickInput
@@ -904,26 +862,26 @@ CheckJoystickInput
 
         LDA #$01
         STA a1A
-        JSR MoveShips
+        JSR MoveLaserheads
         DEC a1A
 
         LDA joystickInput
         AND #$01 ; Up
         BEQ b1E78
-        JSR MoveShipsUp
+        JSR MoveLaserheadsUp
 b1E78   LDA joystickInput
         AND #$02 ; Down
         BEQ b1E81
-        JSR MoveShipsDown
+        JSR MoveLaserheadsDown
 b1E81   LDA joystickInput
         AND #$04 ; Left
         BEQ b1E8A
-        JSR MoveShipsLeft
+        JSR MoveLaserheadsLeft
 b1E8A   LDA joystickInput
         AND #$08 ; Right
         BEQ b1E93
-        JSR MoveShipsRight
-b1E93   JMP MoveShips
+        JSR MoveLaserheadsRight
+b1E93   JMP MoveLaserheads
 
 ;------------------------------------------------
 ; MainGameLoop
@@ -938,7 +896,7 @@ MainGameLoop
 ;------------------------------------------------
 ; DrawBullets4
 ;------------------------------------------------
-DrawBullets4    
+DrawBullets4
         INC f3FE0,X
         LDA f3FE0,X
         AND #$01
@@ -966,7 +924,7 @@ b1EC9   LDA bulletXPosArray,X
         INC bulletXPosArray,X
         DEC bulletColorArray,X
         BNE b1EE8
-        RTS 
+        RTS
 
 b1EE8   LDA bulletCharArray,X
         STA charToDraw
@@ -976,7 +934,7 @@ b1EE8   LDA bulletCharArray,X
 ;------------------------------------------------
 ; DrawBullets3
 ;------------------------------------------------
-DrawBullets3    
+DrawBullets3
         DEC f3FE0,X
         LDA f3FE0,X
         AND #$01
@@ -1003,7 +961,7 @@ b1F15   LDA bulletXPosArray,X
         DEC bulletXPosArray,X
         DEC bulletColorArray,X
         BNE b1F34
-        RTS 
+        RTS
 
 b1F34   LDA bulletCharArray,X
         STA charToDraw
@@ -1014,7 +972,7 @@ b1F34   LDA bulletCharArray,X
 ;------------------------------------------------
 ; DrawBullets1
 ;------------------------------------------------
-DrawBullets1    
+DrawBullets1
         DEC f3FE0,X
         LDA f3FE0,X
         AND #$01
@@ -1041,7 +999,7 @@ b1F63   LDA bulletXPosArray,X
         DEC bulletYPosArray,X
         DEC bulletColorArray,X
         BNE b1F82
-        RTS 
+        RTS
 
 b1F82   LDA bulletCharArray,X
         STA charToDraw
@@ -1052,7 +1010,7 @@ b1F82   LDA bulletCharArray,X
 ;------------------------------------------------
 ; DrawBullets2
 ;------------------------------------------------
-DrawBullets2    
+DrawBullets2
         INC f3FE0,X
         LDA f3FE0,X
         AND #$01
@@ -1080,7 +1038,7 @@ b1FB3   LDA bulletXPosArray,X
         INC bulletYPosArray,X
         DEC bulletColorArray,X
         BNE b1FD2
-        RTS 
+        RTS
 
 b1FD2   LDA bulletCharArray,X
         STA charToDraw
@@ -1090,10 +1048,10 @@ b1FD2   LDA bulletCharArray,X
 ;------------------------------------------------
 ; CheckFireBullets
 ;------------------------------------------------
-CheckFireBullets    
+CheckFireBullets
         DEC a1D
         BEQ b1FE2
-        RTS 
+        RTS
 
 b1FE2   LDA a1A80
         STA a1D
@@ -1164,14 +1122,14 @@ b205D   JSR UpdateBulletArrays
 ;------------------------------------------------
 ; UpdateBulletArrays
 ;------------------------------------------------
-UpdateBulletArrays    
+UpdateBulletArrays
         LDX #$00
 b2065   LDA bulletColorArray,X
         BEQ b2070
-        INX 
+        INX
         CPX #$10
         BNE b2065
-        RTS 
+        RTS
 
 b2070   LDA colorToDraw
         STA bulletColorArray,X
@@ -1187,12 +1145,12 @@ b2070   LDA colorToDraw
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
         LDA #$04
         STA a20
-        RTS 
+        RTS
 
 ;-------------------------------
 ; UpdateBullets
 ;-------------------------------
-UpdateBullets    
+UpdateBullets
         LDA #$01
         STA colorToDraw
         LDX #$00
@@ -1215,14 +1173,14 @@ b20B3   CMP #$03
 
 b20BD   JSR DrawBullets4
 
-NextBullet    
-        INX 
+NextBullet
+        INX
         CPX #$10
         BNE b2099
-        RTS 
+        RTS
 
 b20C6   LDY #$50
-b20C8   DEY 
+b20C8   DEY
         BNE b20C8
         JMP NextBullet
 
@@ -1230,9 +1188,9 @@ b20C8   DEY
 ;------------------------------------------------
 ; PlaySound1
 ;------------------------------------------------
-b20CE   RTS 
+b20CE   RTS
 
-PlaySound1    
+PlaySound1
         LDA VICCRB   ;$900B - frequency of sound osc.2 (alto)
         AND #$80
         BEQ b20CE
@@ -1244,16 +1202,16 @@ PlaySound1
         BEQ b20EA
         LDA #$FF
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
-        RTS 
+        RTS
 
 b20EA   LDA #$00
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
-b20EF   RTS 
+b20EF   RTS
 
 ;------------------------------------------------
 ; PlayBackgroundSounds
 ;------------------------------------------------
-PlayBackgroundSounds    
+PlayBackgroundSounds
         DEC a1F
         BNE b20EF
         LDA a1A7F
@@ -1266,7 +1224,7 @@ pulsingColorArray   .BYTE $06,$02,$04,$05,$03,$07,$01,$00
 ;------------------------------------------------
 ; AnimateTrail
 ;------------------------------------------------
-AnimateTrail    
+AnimateTrail
         LDA #$20
         STA charToDraw
         LDA #$08
@@ -1281,7 +1239,7 @@ AnimateTrail
 ;-------------------------------
 ; DrawExplosionTrails
 ;-------------------------------
-DrawExplosionTrails    
+DrawExplosionTrails
         DEC a0A
         BEQ b2128
         DEC a0B
@@ -1289,48 +1247,48 @@ DrawExplosionTrails
         JSR DrawExplosionTrail
         JMP DrawExplosionTrails
 
-b2128   RTS 
+b2128   RTS
 
 ;------------------------------------------------
 ; DrawExplosionTrail
 ;------------------------------------------------
-DrawExplosionTrail    
+DrawExplosionTrail
         LDA a0B
         AND #$07
-        TAX 
+        TAX
         LDA pulsingColorArray,X
         STA colorToDraw
         LDA pulsingColorArrayIndex
-        SEC 
+        SEC
         SBC a0A
         STA screenPtrXPos
         LDA a08
         STA screenPtrYPPos
         JSR OverwriteCharacter
         LDA pulsingColorArrayIndex
-        CLC 
+        CLC
         ADC a0A
         STA screenPtrXPos
         JSR OverwriteCharacter
         LDA pulsingColorArrayIndex
         STA screenPtrXPos
         LDA a08
-        SEC 
+        SEC
         SBC a0A
         STA screenPtrYPPos
         JSR OverwriteCharacter
         LDA a08
-        CLC 
+        CLC
         ADC a0A
         STA screenPtrYPPos
 ;------------------------------------------------
 ; OverwriteCharacter
 ;------------------------------------------------
-OverwriteCharacter    
+OverwriteCharacter
         LDA screenPtrXPos
         AND #$80
         BEQ b2167
-b2166   RTS 
+b2166   RTS
 
 b2167   LDA screenPtrXPos
         CMP #$19
@@ -1349,9 +1307,9 @@ b2167   LDA screenPtrXPos
 b2184   JMP DrawCharacter
 
 ;------------------------------------------------
-; s2187
+; PerformAlienAnimation
 ;------------------------------------------------
-s2187    
+PerformAlienAnimation
         LDA #$20
         STA a09
 b218B   LDA a10
@@ -1360,11 +1318,11 @@ b218B   LDA a10
         ADC a09
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         LDA a09
-        CLC 
-        LSR 
+        CLC
+        LSR
         STA a0B
         LDA #$10
-        SEC 
+        SEC
         SBC a0B
         STA VICCRE   ;$900E - sound volume
         LDA a11
@@ -1387,20 +1345,21 @@ b218B   LDA a10
         JSR AnimateTrail
         LDX #$02
         LDY #$00
-b21D0   DEY 
+b21D0   DEY
         BNE b21D0
-        DEX 
+        DEX
         BNE b21D0
         DEC a09
         BNE b218B
+
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-        RTS 
+        RTS
 
 ;-------------------------------
 ; PlayNewLevelSounds
 ;-------------------------------
-PlayNewLevelSounds    
+PlayNewLevelSounds
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
 b21E5   LDA #$00
@@ -1410,7 +1369,7 @@ b21E5   LDA #$00
 b21EF   DEC VICCRA   ;$900A - frequency of sound osc.1 (bass)
         INC VICCRB   ;$900B - frequency of sound osc.2 (alto)
         LDY #$C0
-b21F7   DEY 
+b21F7   DEY
         BNE b21F7
         LDA VICCRB   ;$900B - frequency of sound osc.2 (alto)
         BNE b21EF
@@ -1423,12 +1382,13 @@ b21F7   DEY
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; Looks like an interrupt handler
 ;------------------------------------------------
-p2218   LDX #$04
+InterruptHandler
+        LDX #$04
 b221A   INC f96DC,X
         LDA f96DC,X
         AND #$07
@@ -1438,8 +1398,9 @@ b221A   INC f96DC,X
         AND #$07
         STA f96E1,X
         STA a96D3
-        DEX 
+        DEX
         BNE b221A
+
         DEC a21
         BEQ b223D
         JMP ROM_IRQ  ;$EABF - IRQ interrupt handler
@@ -1450,26 +1411,29 @@ b223D   LDA #$07
         LDA a22
         AND #$07
         STA a22
-        TAX 
+        TAX
         LDA a23
         STA a0E
         LDA a24
-        CLC 
+        CLC
         ADC #$84
         STA a0F
+
         LDY #$00
         LDA pulsingColorArray,X
-b225A   STA (p0E),Y
-        INY 
+b225A   STA (a0E),Y
+        INY
         CPY #$08
         BNE b225A
+
         LDA a22
         EOR #$07
-        TAX 
+        TAX
         LDA pulsingColorArray,X
+
         LDY #$03
 b226B   STA f96BE,Y
-        DEY 
+        DEY
         BNE b226B
         JMP ROM_IRQ  ;$EABF - IRQ interrupt handler
 
@@ -1480,10 +1444,10 @@ f2274   .BYTE $00,$04,$20,$1E,$10,$14,$0A,$0A
 ;------------------------------------------------
 ; UpdateEnemyPositions
 ;------------------------------------------------
-UpdateEnemyPositions    
+UpdateEnemyPositions
         DEC a26
         BEQ b228C
-        RTS 
+        RTS
 
 b228C   LDA a1A81
         STA a26
@@ -1493,23 +1457,23 @@ b2293   LDA f3E00,X
         BEQ b22A4
         DEC f3EE0,X
         BNE b22A4
-        TXA 
-        PHA 
+        TXA
+        PHA
         JSR EnemyAnimationRoutine
-        PLA 
-        TAX 
-b22A4   INX 
+        PLA
+        TAX
+b22A4   INX
         CPX #$20
         BNE b2293
 
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; EnemyAnimationRoutine
 ;------------------------------------------------
-EnemyAnimationRoutine    
+EnemyAnimationRoutine
         LDA f3E00,X
-        TAY 
+        TAY
         LDA f2274,Y
         STA f3EE0,X
         LDA f3E00,X
@@ -1524,38 +1488,38 @@ b22BE   LDA #$01
         LDA f3EA0,X
         EOR #$0F
         STA VICCRE   ;$900E - sound volume
-        INC f3EC0,X
-        LDA f3EC0,X
+        INC enemyCharArray,X
+        LDA enemyCharArray,X
         AND #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         BEQ b22DF
         JMP DrawEnemies
 
 b22DF   LDA #$20
         STA charToDraw
-        LDA f3E20,X
-        SEC 
+        LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
-        LDA f3E40,X
-        SEC 
+        LDA enemyYPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrYPPos
         JSR UpdateEnemyFragment
         LDA screenPtrXPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
 p2301   STA screenPtrXPos
         JSR UpdateEnemyFragment
         LDA screenPtrYPPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
         STA screenPtrYPPos
         JSR UpdateEnemyFragment
-        LDA f3E20,X
-        SEC 
+        LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
         JSR UpdateEnemyFragment
@@ -1564,7 +1528,7 @@ p2301   STA screenPtrXPos
 ;-------------------------------
 ; DrawEnemies
 ;-------------------------------
-DrawEnemies    
+DrawEnemies
         LDA f3EA0,X
         BNE b2337
         LDA f3E80,X
@@ -1572,23 +1536,23 @@ DrawEnemies
         INC f3EA0,X
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-        RTS 
+        RTS
 
-b2337   LDA f3E20,X
-        SEC 
+b2337   LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
-        LDA f3E40,X
-        SEC 
+        LDA enemyYPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrYPPos
-        LDA f3EC0,X
-        CLC 
+        LDA enemyCharArray,X
+        CLC
         ADC #$1B
         STA charToDraw
         JSR UpdateEnemyFragment
         LDA screenPtrXPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
         STA screenPtrXPos
@@ -1596,17 +1560,17 @@ b2337   LDA f3E20,X
         INC charToDraw
         JSR UpdateEnemyFragment
         LDA screenPtrYPPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
         STA screenPtrYPPos
         LDA charToDraw
-        CLC 
+        CLC
         ADC #$0A
         STA charToDraw
         JSR UpdateEnemyFragment
-        LDA f3E20,X
-        SEC 
+        LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
         DEC charToDraw
@@ -1615,11 +1579,11 @@ b2337   LDA f3E20,X
 ;------------------------------------------------
 ; UpdateEnemyFragment
 ;------------------------------------------------
-UpdateEnemyFragment    
+UpdateEnemyFragment
         LDA screenPtrXPos
         AND #$80
         BEQ b238F
-b238E   RTS 
+b238E   RTS
 
 b238F   LDA screenPtrXPos
         CMP #$19
@@ -1630,29 +1594,29 @@ b238F   LDA screenPtrXPos
         LDA screenPtrYPPos
         CMP #$1E
         BPL b238E
-        TXA 
-        PHA 
+        TXA
+        PHA
         JSR GetCharAtCurrentPos
         LDX #$0A
 b23A8   CMP f23B9,X
         BEQ b23B3
-        DEX 
+        DEX
         BNE b23A8
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
 b23B3   JSR DrawCharacter
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
 f23B9   .BYTE $00,$20,$1B,$1C,$1D,$1E,$25,$26
         .BYTE $27,$28,$AF
 ;-------------------------------
 ; j23C4
 ;-------------------------------
-j23C4    
+j23C4
         CMP #$10
         BNE b23CB
         JMP j2637
@@ -1663,11 +1627,11 @@ b23CB   CMP #$06
 
 b23D2   CMP #$07
         BNE b23D9
-        JMP j2D6D
+        JMP AnimateSpinningDroids
 
 b23D9   CMP #$09
         BNE b23E0
-        JMP j3292
+        JMP AnimateGoat
 
 b23E0   LDY f3E00,X
         LDA f23F7,Y
@@ -1681,30 +1645,30 @@ f23F7   .BYTE $01,$01,$07,$05,$03,$02,$01,$05
 ;-------------------------------
 ; j2403
 ;-------------------------------
-j2403    
-        INC f3EC0,X
-        LDA f3EC0,X
+j2403
+        INC enemyCharArray,X
+        LDA enemyCharArray,X
         AND #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         LDA f3E60,X
         CMP #$00
         BEQ b2418
         JMP j2463
 
-b2418   LDA f3E40,X
+b2418   LDA enemyYPosArray,X
         CMP #$01
         BNE b2422
         JMP j25A9
 
-b2422   LDA f3EC0,X
+b2422   LDA enemyCharArray,X
         AND #$01
         BNE b2447
-        DEC f3E40,X
+        DEC enemyYPosArray,X
         LDA enemyArray,Y
         STA charToDraw
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
         JSR DrawCharacter
         LDA #$20
@@ -1713,12 +1677,12 @@ b2422   LDA f3EC0,X
         JMP DrawCharacter
 
 b2447   LDA enemyArray,Y
-        CLC 
+        CLC
         ADC #$03
         STA charToDraw
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
         JSR DrawCharacter
         INC charToDraw
@@ -1728,39 +1692,39 @@ b2447   LDA enemyArray,Y
 ;-------------------------------
 ; j2463
 ;-------------------------------
-j2463    
+j2463
         CMP #$01
         BEQ b246A
         JMP j24F2
 
-b246A   LDA f3EC0,X
+b246A   LDA enemyCharArray,X
         AND #$01
         BNE b2497
         LDA enemyArray,Y
         STA charToDraw
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         JSR DrawCharacter
         LDA #$20
         STA charToDraw
         DEC screenPtrYPPos
         JSR DrawCharacter
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         CMP #$1A
         BEQ b2494
-        RTS 
+        RTS
 
 b2494   JMP j25A9
 
-b2497   INC f3E40,X
-        LDA f3E40,X
+b2497   INC enemyYPosArray,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
         LDA enemyArray,Y
-        CLC 
+        CLC
         ADC #$03
         STA charToDraw
         JSR DrawCharacter
@@ -1771,75 +1735,75 @@ b2497   INC f3E40,X
         LDX #$08
 b24B8   LDA #$01
         STA f3E00,X
-        STA f3EC0,X
+        STA enemyCharArray,X
         JSR UpdateScrPtrYPosWithX
         AND #$03
         STA f3E60,X
         JSR UpdateScrPtrYPosWithX
         AND #$03
-        CLC 
+        CLC
         ADC #$02
         STA f3E80,X
         JSR UpdateScrPtrYPosWithX
         AND #$0F
-        CLC 
+        CLC
         ADC #$06
-        STA f3E40,X
+        STA enemyYPosArray,X
         LDA #$10
         STA f3EA0,X
         LDA fC000,X
         AND #$0F
-        CLC 
+        CLC
         ADC #$06
-        STA f3E20,X
-        DEX 
+        STA enemyXPosArray,X
+        DEX
         BNE b24B8
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j24F2
 ;-------------------------------
-j24F2    
+j24F2
         CMP #$02
         BEQ b24F9
         JMP j2553
 
-b24F9   LDA f3EC0,X
+b24F9   LDA enemyCharArray,X
         AND #$01
         BEQ b252E
         LDA enemyArray,Y
         STA charToDraw
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         JSR DrawCharacter
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         CMP #$17
         BNE b251A
-        RTS 
+        RTS
 
 b251A   LDA #$20
         STA charToDraw
         INC screenPtrXPos
         JSR DrawCharacter
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         CMP #$01
         BEQ b252B
-        RTS 
+        RTS
 
 b252B   JMP j25B8
 
-b252E   LDA f3E20,X
+b252E   LDA enemyXPosArray,X
         CMP #$01
         BEQ b252B
-        DEC f3E20,X
+        DEC enemyXPosArray,X
         LDA enemyArray,Y
         STA charToDraw
         INC charToDraw
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         JSR DrawCharacter
         INC screenPtrXPos
@@ -1849,19 +1813,19 @@ b252E   LDA f3E20,X
 ;-------------------------------
 ; j2553
 ;-------------------------------
-j2553    
-        LDA f3E20,X
+j2553
+        LDA enemyXPosArray,X
         CMP #$17
         BNE b255D
         JMP j25B8
 
-b255D   LDA f3EC0,X
+b255D   LDA enemyCharArray,X
         AND #$01
         BNE b2582
-        INC f3E20,X
-        LDA f3E20,X
+        INC enemyXPosArray,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA enemyArray,Y
         STA charToDraw
@@ -1871,9 +1835,9 @@ b255D   LDA f3EC0,X
         DEC screenPtrXPos
         JMP DrawCharacter
 
-b2582   LDA f3E20,X
+b2582   LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA enemyArray,Y
         STA charToDraw
@@ -1886,78 +1850,78 @@ b2582   LDA f3E20,X
 ;------------------------------------------------
 ; UpdateScrPtrYPosWithX
 ;------------------------------------------------
-UpdateScrPtrYPosWithX    
+UpdateScrPtrYPosWithX
         STX screenPtrYPPos
         INC a27
         LDX a27
         LDA fC000,X
         LDX screenPtrYPPos
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j25A9
 ;-------------------------------
-j25A9    
+j25A9
         JSR UpdateScrPtrYPosWithX
         AND #$03
         BEQ j25A9
         CMP #$01
         BEQ j25A9
         STA f3E60,X
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j25B8
 ;-------------------------------
-j25B8    
+j25B8
         JSR UpdateScrPtrYPosWithX
         AND #$01
         STA f3E60,X
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; s25C1
 ;------------------------------------------------
-s25C1    
+s25C1
         LDA bulletXPosArray,X
         STA screenPtrXPos
         LDA bulletYPosArray,X
         STA screenPtrYPPos
-        TXA 
-        PHA 
+        TXA
+        PHA
         JSR GetCharAtCurrentPos
         AND #$80
         BNE b25D7
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
-b25D7   PLA 
-        TAX 
+b25D7   PLA
+        TAX
         LDY #$00
         STY a29
 b25DD   LDA bulletXPosArray,X
-        CMP f3E20,Y
+        CMP enemyXPosArray,Y
         BEQ b25FA
 ;-------------------------------
 ; j25E5
 ;-------------------------------
-j25E5    
-        INY 
+j25E5
+        INY
         CPY #$20
         BNE b25DD
         LDA a29
         BEQ b25F9
-        PLA 
-        PLA 
+        PLA
+        PLA
         LDA #$F0
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDA #$02
         STA a28
-b25F9   RTS 
+b25F9   RTS
 
 b25FA   LDA bulletYPosArray,X
-        CMP f3E40,Y
+        CMP enemyYPosArray,Y
         BEQ b2605
 b2602   JMP j25E5
 
@@ -1976,7 +1940,7 @@ b2605   LDA f3E00,Y
         STA f3E00,Y
         STA f3EA0,Y
         LDA #$01
-        STA f3EC0,Y
+        STA enemyCharArray,Y
         STA f3EE0,Y
 b262D   LDA #$00
         STA bulletColorArray,X
@@ -1986,15 +1950,15 @@ b262D   LDA #$00
 ;-------------------------------
 ; j2637
 ;-------------------------------
-j2637    
+j2637
         LDA f3EA0,X
         CMP #$10
         BEQ b2641
         JMP j267C
 
-b2641   LDA f3E20,X
+b2641   LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA #$20
         STA charToDraw
@@ -2012,57 +1976,57 @@ b2641   LDA f3E20,X
 ;------------------------------------------------
 ; s266A
 ;------------------------------------------------
-s266A    
-        TXA 
-        PHA 
+s266A
+        TXA
+        PHA
         JSR GetCharAtCurrentPos
         AND #$80
         BNE b2676
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
 b2676   JSR DrawCharacter
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
 ;-------------------------------
 ; j267C
 ;-------------------------------
-j267C    
-        DEC f3EC0,X
-        LDA f3EC0,X
+j267C
+        DEC enemyCharArray,X
+        LDA enemyCharArray,X
         AND #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         BNE b268C
         JMP j26E2
 
-b268C   LDA f3E20,X
-        SEC 
+b268C   LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
-        LDA f3E40,X
-        SEC 
+        LDA enemyYPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrYPPos
         LDA #$20
         STA charToDraw
         JSR UpdateEnemyFragment
         LDA screenPtrXPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
         STA screenPtrXPos
         JSR UpdateEnemyFragment
         LDA screenPtrYPPos
-        CLC 
+        CLC
         ADC f3EA0,X
         ADC f3EA0,X
         STA screenPtrYPPos
         JSR UpdateEnemyFragment
-        LDA f3E20,X
-        SEC 
+        LDA enemyXPosArray,X
+        SEC
         SBC f3EA0,X
         STA screenPtrXPos
         JSR UpdateEnemyFragment
@@ -2071,22 +2035,19 @@ b268C   LDA f3E20,X
         CMP #$10
         BNE j26E2
         JSR s2D0D
-        TXA 
-        PHA 
+        TXA
+        PHA
         JSR s274C
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
-;-------------------------------
-; j26E2
-;-------------------------------
-j26E2    
+j26E2
         LDA f3EA0,X
         EOR #$0F
-        CLC 
-        ROR 
-        TAY 
+        CLC
+        ROR
+        TAY
         LDA pulsingColorArray,Y
         STA colorToDraw
         JMP b2337
@@ -2094,10 +2055,10 @@ j26E2
 ;-------------------------------
 ; PlaySound2
 ;-------------------------------
-PlaySound2    
+PlaySound2
         LDA a28
         BNE b26F7
-b26F6   RTS 
+b26F6   RTS
 
 b26F7   DEC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
@@ -2109,19 +2070,20 @@ b26F7   DEC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         BNE b26F6
         LDA #$00
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j2710
 ;-------------------------------
-j2710    
+j2710
         LDX #$00
 b2712   LDA f3E00,X
         BEQ b271D
-        INX 
+        INX
         CPX #$20
         BNE b2712
-        RTS 
+
+        RTS
 
 b271D   LDA screenPtrXPos
         STA f3E80,X
@@ -2129,25 +2091,26 @@ b271D   LDA screenPtrXPos
         BNE b272A
         LDA #$02
         STA charToDraw
+
 b272A   LDA #$01
         STA f3E00,X
         STA f3EE0,X
         LDA screenPtrYPPos
         STA f3E60,X
         LDA charToDraw
-        STA f3E20,X
+        STA enemyXPosArray,X
         LDA colorToDraw
-        STA f3E40,X
+        STA enemyYPosArray,X
         LDA #$10
         STA f3EA0,X
         LDA #$00
-        STA f3EC0,X
-b274B   RTS 
+        STA enemyCharArray,X
+b274B   RTS
 
 ;------------------------------------------------
 ; s274C
 ;------------------------------------------------
-s274C    
+s274C
         LDA #$00
         STA f3E00,X
         LDA f3E80,X
@@ -2157,24 +2120,24 @@ s274C
         BEQ b2760
         CMP #$03
         BNE b277B
-b2760   LDA f3E20,X
+b2760   LDA enemyXPosArray,X
         STA charToDraw
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA colorToDraw
         LDA #$02
         STA screenPtrXPos
         JSR UpdateScrPtrYPosWithX
         AND #$01
-        CLC 
+        CLC
         ADC #$02
         STA screenPtrYPPos
         JMP j2710
 
 b277B   CMP #$04
         BNE b2799
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA charToDraw
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA colorToDraw
         LDA #<p0203
         STA screenPtrXPos
@@ -2186,9 +2149,9 @@ b277B   CMP #$04
 
 b2799   CMP #$08
         BNE b274B
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA charToDraw
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA colorToDraw
         LDA #$08
         STA screenPtrXPos
@@ -2198,9 +2161,9 @@ b2799   CMP #$08
         JMP j2710
 
 ;------------------------------------------------
-; MoveShip
+; MoveLaserhead
 ;------------------------------------------------
-MoveShip    
+MoveLaserhead
         LDA a2A
         BEQ b27C0
 
@@ -2227,7 +2190,7 @@ b27D7   JMP PlayerKilled
 ;------------------------------------------------
 ; s27DA
 ;------------------------------------------------
-s27DA    
+s27DA
         LDA #$00
         STA a2A
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
@@ -2235,15 +2198,15 @@ s27DA
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDA #$01
         STA a1A
-        JSR MoveShips
+        JSR MoveLaserheads
         JSR s2867
         LDA #$01
         STA a09
 b27F5   LDA a10
         STA pulsingColorArrayIndex
         LDA a09
-        CLC 
-        LSR 
+        CLC
+        LSR
         EOR #$0F
         STA VICCRE   ;$900E - sound volume
         LDA #$A0
@@ -2270,9 +2233,9 @@ b27F5   LDA a10
         JSR DrawEnemyExplosion
         LDX #$02
 b2836   LDY #$80
-b2838   DEY 
+b2838   DEY
         BNE b2838
-        DEX 
+        DEX
         BNE b2836
         JSR s2933
         INC a09
@@ -2283,12 +2246,22 @@ b2838   DEY
         BEQ b2850
         JMP j3414
 
-b2850   RTS 
+b2850   RTS
 
 ;------------------------------------------------
 ; DrawEnemyExplosion
+;
+; CHARACTER $a4
+; 01000010    *    *
+; 00010000      *
+; 10000101   *    * *
+; 00100000     *
+; 00000100        *
+; 00100001     *    *
+; 10000000   *
+; 00010010      *  *
 ;------------------------------------------------
-DrawEnemyExplosion    
+DrawEnemyExplosion
         LDA #$A4
         STA charToDraw
         LDA #$08
@@ -2303,7 +2276,7 @@ DrawEnemyExplosion
 ;------------------------------------------------
 ; s2867
 ;------------------------------------------------
-s2867    
+s2867
         LDX #$00
 b2869   LDA bulletColorArray,X
         BEQ b2884
@@ -2316,28 +2289,29 @@ b2869   LDA bulletColorArray,X
         LDA #$00
         STA bulletColorArray,X
         JSR DrawCharacter
-b2884   INX 
+b2884   INX
         CPX #$10
         BNE b2869
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j288A
 ;-------------------------------
-j288A    
+j288A
         JSR s27DA
 
 ;-------------------------------
 ; RestartLevel
 ;-------------------------------
-RestartLevel    
+RestartLevel
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         STA a2A
         STA a1A
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
         JSR ClearFullScreen
-        JSR s28ED
+        JSR PlayLevelStartSounds
+
         LDX #$00
         STX a51
 b28A3   LDA f3E00,X
@@ -2351,52 +2325,51 @@ b28AE   LDA #$10
         LDA #$02
         STA f3E80,X
         LDA #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         STA f3EE0,X
-b28C3   INX 
+b28C3   INX
         CPX #$20
         BNE b28A3
+
         LDY #$26
-b28CA   TYA 
-        PHA 
+b28CA   TYA
+        PHA
         JSR s2933
         LDY #$C0
-b28D1   DEY 
+b28D1   DEY
         BNE b28D1
-        PLA 
-        TAY 
-        DEY 
+        PLA
+        TAY
+        DEY
         BNE b28CA
         JSR ClearFullScreen
-        JSR s2187
-        JSR s298E
+        JSR PerformAlienAnimation
+        JSR AdvanceAlienAnimation
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
         LDX #$F8
-        TXS 
+        TXS
         JMP MainGameLoop
 
 ;------------------------------------------------
-; s28ED
+; PlayLevelStartSounds
 ;------------------------------------------------
-s28ED    
+PlayLevelStartSounds
         LDA #$06
         STA a50
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
 b28F6   LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-;-------------------------------
-; j28FB
-;-------------------------------
-j28FB    
+
+j28FB
         DEC VICCRD   ;$900D - frequency of sound osc.4 (noise)
         LDA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         CMP #$CF
         BEQ b2910
         JSR b228C
         LDY #$30
-b290A   DEY 
+b290A   DEY
         BNE b290A
         JMP j28FB
 
@@ -2411,39 +2384,37 @@ b2910   LDA VICCR4   ;$9004 - raster beam location (bits 7-0)
 
 b2924   LDA #$08
         STA VICCRF   ;$900F - screen colors: background, border & inverse
-;-------------------------------
-; j2929
-;-------------------------------
-j2929    
+
+j2929
         DEC a50
         BNE b28F6
         LDA #$00
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; s2933
 ;------------------------------------------------
-s2933    
+s2933
         LDX #$00
-b2935   TXA 
-        PHA 
+b2935   TXA
+        PHA
         LDA f3E00,X
         BEQ b2943
         CMP #$07
         BEQ b2943
         JSR EnemyAnimationRoutine
-b2943   PLA 
-        TAX 
-        INX 
+b2943   PLA
+        TAX
+        INX
         CPX #$20
         BNE b2935
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; ResetEnergyBar
 ;------------------------------------------------
-ResetEnergyBar    
+ResetEnergyBar
         LDA #>p1C08
         STA screenPtrYPPos
         LDA #<p1C08
@@ -2455,12 +2426,12 @@ b2955   LDA f296E,X
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$0F
         BNE b2955
         LDA #$01
         STA curEnergyBarLevel
-        RTS 
+        RTS
 
 f296E   .BYTE $A5,$A7,$A7,$A7,$A7,$A7,$A7,$A7
         .BYTE $A7,$A7,$A7,$A7,$A7,$A7,$A7,$A7
@@ -2468,12 +2439,12 @@ f296E   .BYTE $A5,$A7,$A7,$A7,$A7,$A7,$A7,$A7
 f297F   .BYTE $05,$05,$05,$05,$05,$05,$05,$05
         .BYTE $05,$05,$05,$02,$02,$02,$02
 ;------------------------------------------------
-; s298E
+; AdvanceAlienAnimation
 ;------------------------------------------------
-s298E    
+AdvanceAlienAnimation
         LDA a51
         BNE b2993
-        RTS 
+        RTS
 
 b2993   JSR UpdateScrPtrYPosWithX
         AND #$07
@@ -2491,26 +2462,26 @@ b2993   JSR UpdateScrPtrYPosWithX
         JSR j2710
         DEC a51
         BNE b2993
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; WasteSomeCycles
 ;------------------------------------------------
-WasteSomeCycles    
+WasteSomeCycles
         INC a2C
         BNE b29BE
         INC a2D
 b29BE   LDY #$00
-        LDA (p2C),Y
-        RTS 
+        LDA (a2C),Y
+        RTS
 
 ;-------------------------------
 ; j29C3
 ;-------------------------------
-j29C3    
+j29C3
         DEC a2B
         BEQ b29C8
-        RTS 
+        RTS
 
 b29C8   JSR UpdateScrPtrYPosWithX
         AND #$03
@@ -2518,7 +2489,7 @@ b29C8   JSR UpdateScrPtrYPosWithX
         STA a2B
         JSR UpdateScrPtrYPosWithX
         AND #$0F
-        TAY 
+        TAY
         LDA f29E8,Y
         STA screenPtrXPos
         JSR UpdateScrPtrYPosWithX
@@ -2529,18 +2500,19 @@ b29C8   JSR UpdateScrPtrYPosWithX
 
 f29E8   .BYTE $02,$03,$04,$05,$06,$08,$09,$0A
         .BYTE $0B,$03,$04,$09,$0B,$0A,$02,$08
+
 ;------------------------------------------------
 ; s29F8
 ;------------------------------------------------
-s29F8    
+s29F8
         DEC a2E
         BEQ b29FD
-b29FC   RTS 
+b29FC   RTS
 
 b29FD   LDA #$20
         STA a2E
         LDY #$00
-        LDA (p2C),Y
+        LDA (a2C),Y
         BNE b2A0A
         JMP LevelCompleteSequence
 
@@ -2551,16 +2523,14 @@ b2A0A   CMP #$FF
 b2A11   STA screenPtrXPos
         DEC a2B
         BNE b29FC
-        INY 
-        LDA (p2C),Y
+        INY
+        LDA (a2C),Y
         STA a50
-        INY 
-        LDA (p2C),Y
+        INY
+        LDA (a2C),Y
         STA a2B
-;-------------------------------
-; j2A21
-;-------------------------------
-j2A21    
+
+j2A21
         JSR UpdateScrPtrYPosWithX
         AND #$07
         ADC #$09
@@ -2576,69 +2546,85 @@ j2A21
         DEC a50
         BNE j2A21
         LDY #$00
-        LDA (p2C),Y
+        LDA (a2C),Y
         CMP #$FF
         BNE b2A4A
-        RTS 
+        RTS
 
 b2A4A   LDA a2C
-        CLC 
+        CLC
         ADC #$03
         STA a2C
         LDA a2D
         ADC #$00
         STA a2D
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j2A58
 ;-------------------------------
-j2A58    
+j2A58
         LDA #$01
         STA colorToDraw
-        INC f3EC0,X
-        LDA f3EC0,X
+        INC enemyCharArray,X
+        LDA enemyCharArray,X
         AND #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         BEQ b2A6C
-        JMP j2AA8
+        JMP AnimateSpokeAlien
 
-b2A6C   LDA f3E20,X
+b2A6C   LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA #$20
         STA charToDraw
         JSR DrawCharacter
+
         LDY f3E60,X
         CPY #$00
         BNE b2A8A
-        DEC f3E40,X
-        INC f3E20,X
+        DEC enemyYPosArray,X
+        INC enemyXPosArray,X
+
 b2A8A   CPY #$01
         BNE b2A94
-        INC f3E40,X
-        INC f3E20,X
+        INC enemyYPosArray,X
+        INC enemyXPosArray,X
+
 b2A94   CPY #$02
         BNE b2A9E
-        INC f3E40,X
-        DEC f3E20,X
+        INC enemyYPosArray,X
+        DEC enemyXPosArray,X
+
 b2A9E   CPY #$03
-        BNE j2AA8
-        DEC f3E40,X
-        DEC f3E20,X
+        BNE AnimateSpokeAlien
+        DEC enemyYPosArray,X
+        DEC enemyXPosArray,X
+
 ;-------------------------------
-; j2AA8
+; AnimateSpokeAlien
+;
+; CHARACTER $99           ; CHARACTER $9a
+; 00000001          *     ; 00001111       ****
+; 00000010         *      ; 00001001       *  *
+; 00000100        *       ; 00001001       *  *
+; 00001000       *        ; 00001111       ****
+; 11110000   ****         ; 00010000      *
+; 10010000   *  *         ; 00100000     *
+; 10010000   *  *         ; 01000000    *
+; 11110000   ****         ; 10000000   *
 ;-------------------------------
-j2AA8    
-        LDA f3E20,X
+
+AnimateSpokeAlien
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDY f3E60,X
         CPY #$00
         BNE b2AE1
-        LDA f3EC0,X
+        LDA enemyCharArray,X
         AND #$01
         BNE b2AC7
         LDA #$99
@@ -2658,11 +2644,11 @@ b2AD7   LDA screenPtrXPos
         BNE b2AE0
         JMP j2B61
 
-b2AE0   RTS 
+b2AE0   RTS
 
 b2AE1   CPY #$01
         BNE b2B0A
-        LDA f3EC0,X
+        LDA enemyCharArray,X
         BNE b2AF1
         LDA #$9B
         STA charToDraw
@@ -2683,7 +2669,7 @@ b2B01   LDA screenPtrYPPos
 
 b2B0A   CPY #$02
         BNE b2B33
-        LDA f3EC0,X
+        LDA enemyCharArray,X
         BNE b2B1A
         LDA #$9A
         STA charToDraw
@@ -2702,7 +2688,7 @@ b2B2A   LDA screenPtrXPos
         BNE b2AE0
         JMP j2B61
 
-b2B33   LDA f3EC0,X
+b2B33   LDA enemyCharArray,X
         BNE b2B3F
         LDA #$9C
         STA charToDraw
@@ -2717,51 +2703,51 @@ b2B3F   LDA #$9B
         LDA screenPtrYPPos
         CMP a11
         BEQ j2B61
-        RTS 
+        RTS
 
 ;-------------------------------
 ; j2B53
 ;-------------------------------
-j2B53    
+j2B53
         INC f3E60,X
 ;-------------------------------
 ; j2B56
 ;-------------------------------
-j2B56    
+j2B56
         LDA f3E60,X
         AND #$03
         STA f3E60,X
-        JMP j2AA8
+        JMP AnimateSpokeAlien
 
 ;-------------------------------
 ; j2B61
 ;-------------------------------
-j2B61    
+j2B61
         DEC f3E60,X
         JMP j2B56
 
 ;------------------------------------------------
 ; MaterializeCharEffect
 ;------------------------------------------------
-MaterializeCharEffect    
+MaterializeCharEffect
         LDA #$20
         STA a09
-b2B6B   TXA 
-        PHA 
+b2B6B   TXA
+        PHA
         JSR AnimateTrail
         LDA a09
-        CLC 
-        ASL 
+        CLC
+        ASL
         ADC #$A0
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         LDY #$C0
-b2B7B   DEY 
+b2B7B   DEY
         BNE b2B7B
-        PLA 
-        TAX 
+        PLA
+        TAX
         DEC a09
         BNE b2B6B
-        TXA 
+        TXA
         STA charToDraw
         LDA #$01
         STA colorToDraw
@@ -2771,7 +2757,7 @@ b2B7B   DEY
 ;------------------------------------------------
 ; PrepareToDieNewLevelEffect
 ;------------------------------------------------
-PrepareToDieNewLevelEffect    
+PrepareToDieNewLevelEffect
         LDA #>p0505
         STA a08
         LDA #<p0505
@@ -2779,18 +2765,18 @@ PrepareToDieNewLevelEffect
         LDX #$00
         LDA a36
         BEQ b2B9F
-        RTS 
+        RTS
 
-b2B9F   TXA 
-        PHA 
+b2B9F   TXA
+        PHA
         LDA txtPrepareToDie,X
         AND #$3F
-        TAX 
+        TAX
         JSR MaterializeCharEffect
         INC pulsingColorArrayIndex
-        PLA 
-        TAX 
-        INX 
+        PLA
+        TAX
+        INX
         CPX #$0E
         BNE b2B9F
 
@@ -2804,7 +2790,7 @@ b2B9F   TXA
 ;------------------------------------------------
 ; ClearFullScreen
 ;------------------------------------------------
-ClearFullScreen    
+ClearFullScreen
         LDA #$20
         STA charToDraw
         LDA a11
@@ -2820,14 +2806,14 @@ b2BCF   JSR DrawCharacter
         LDA screenPtrYPPos
         CMP #$1B
         BNE b2BCB
-        RTS 
+        RTS
 
 txtPrepareToDie   .TEXT "PREPARE TO DIE"
 
 ;------------------------------------------------
 ; UpdateEnergyBar
 ;------------------------------------------------
-UpdateEnergyBar    
+UpdateEnergyBar
         LDA joystickInput
         AND #$80
         BEQ b2C27
@@ -2846,7 +2832,7 @@ b2C06   LDX curEnergyBarLevel
         DEC dsplyEnergyBar,X
         JMP j2C41
 
-b2C15   INX 
+b2C15   INX
         CPX #$0F
         BNE b2C1D
         JMP PlayerKilled
@@ -2869,20 +2855,20 @@ b2C3A   LDA #$A7
         STA dsplyEnergyBar,X
         DEC curEnergyBarLevel
 
-j2C41    
+j2C41
         LDA a12
         STA a2F
         LDA a17
         STA a30
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; PulsingTextColorEffect
 ;------------------------------------------------
-PulsingTextColorEffect    
+PulsingTextColorEffect
         LDA pulsingColorArrayIndex
         AND #$07
-        TAX 
+        TAX
         LDA pulsingColorArray,X
         STA colorToDraw
         LDA a16
@@ -2907,7 +2893,7 @@ b2C5C   JSR GetCharAtCurrentPos
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
 b2C7E   INC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDY #$80
-b2C83   DEY 
+b2C83   DEY
         BNE b2C83
         LDA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         BNE b2C7E
@@ -2917,22 +2903,22 @@ b2C83   DEY
 
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
-        RTS 
+        RTS
 
 ;-------------------------------
 ; PlayerKilled
 ;-------------------------------
-PlayerKilled    
+PlayerKilled
         JSR s27DA
         JSR ClearFullScreen
         LDA #$0F
         STA VICCRE   ;$900E - sound volume
         JSR ResetEnergyBar
-        DEC dsplyShipsLeft
-        LDA dsplyShipsLeft
+        DEC dsplyLaserheadsLeft
+        LDA dsplyLaserheadsLeft
         CMP #$30
         BNE b2CB8
-        LDA a37
+        LDA currentPlayer
         BEQ b2CB5
         CMP #$02
         BNE b2CB8
@@ -2943,16 +2929,16 @@ b2CB8   LDX #$00
         STA a08
         LDA #<p0901
         STA pulsingColorArrayIndex
-b2CC2   TXA 
-        PHA 
+b2CC2   TXA
+        PHA
         LDA txtLaserHeadsDestablized,X
         AND #$3F
-        TAX 
+        TAX
         JSR MaterializeCharEffect
-        PLA 
-        TAX 
+        PLA
+        TAX
         INC pulsingColorArrayIndex
-        INX 
+        INX
         CPX #$17
         BNE b2CC2
 
@@ -2964,54 +2950,55 @@ b2CC2   TXA
         JSR PulsingTextColorEffect
         JSR ClearFullScreen
 
-        LDA a37
+        LDA currentPlayer
         BEQ b2CF3
         JSR ResetGameVariables
         LDX #$F8
-        TXS 
+        TXS
         JMP EnterNextLevel
 
 b2CF3   JMP RestartLevel
 
 txtLaserHeadsDestablized   .TEXT "LASERHEADS DESTABILISED"
+
 ;------------------------------------------------
 ; s2D0D
 ;------------------------------------------------
-s2D0D    
+s2D0D
         LDA f3E80,X
         STA screenPtrXPos
-        TXA 
-        PHA 
+        TXA
+        PHA
         LDX screenPtrXPos
         LDY f2D53,X
         LDA f2D41,X
-        TAX 
-b2D1D   TYA 
-        PHA 
+        TAX
+b2D1D   TYA
+        PHA
         LDA a36
         BEQ b2D27
-        PLA 
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        PLA
+        TAX
+        RTS
 
-b2D27   LDA (p23),Y
-        CLC 
+b2D27   LDA (a23),Y
+        CLC
         ADC #$01
-        STA (p23),Y
+        STA (a23),Y
         CMP #$3A
         BNE b2D39
         LDA #$30
-        STA (p23),Y
-        DEY 
+        STA (a23),Y
+        DEY
         BNE b2D27
-b2D39   PLA 
-        TAY 
-        DEX 
+b2D39   PLA
+        TAY
+        DEX
         BNE b2D1D
-        PLA 
-        TAX 
-        RTS 
+        PLA
+        TAX
+        RTS
 
 f2D41   .BYTE $01,$01,$03,$06,$09,$06,$06,$05
         .BYTE $04,$01,$03,$04,$05,$05,$06,$06
@@ -3019,19 +3006,22 @@ f2D41   .BYTE $01,$01,$03,$06,$09,$06,$06,$05
 f2D53   .BYTE $05,$05,$05,$05,$05,$04,$04,$04
         .BYTE $04,$06,$04,$05,$05,$05,$05,$05
         .BYTE $05,$05
-f2D65   .BYTE $A8,$A9,$AA,$AB,$AC,$AB,$AA
-        .BYTE $A9
+
 ;-------------------------------
-; j2D6D
+; AnimateSpinningDroids
 ;-------------------------------
-j2D6D    
+
+spinningDroidAnimation .BYTE $A8,$A9,$AA,$AB,$AC,$AB,$AA
+                       .BYTE $A9
+
+AnimateSpinningDroids
         LDA a50
         BEQ b2D72
-        RTS 
+        RTS
 
 b2D72   DEC f3EA0,X
         BEQ b2D7A
-        JMP j2D8A
+        JMP AnimateSpinningDroid
 
 b2D7A   INC f3E60,X
         LDA f3E60,X
@@ -3040,62 +3030,83 @@ b2D7A   INC f3E60,X
         LDA #$0C
         STA f3EA0,X
 ;-------------------------------
-; j2D8A
+; AnimateSpinningDroid
+;
+; CHARACTER $a8
+; 00001000       *
+; 00001100       **
+; 00001000       *
+; 01011111    * *****
+; 11111010   ***** *
+; 00010000      *
+; 00110000     **
+; 00010000      *
 ;-------------------------------
-j2D8A    
+AnimateSpinningDroid
         LDA f3E60,X
         CMP #$07
         BNE b2D94
         JSR s2DAF
 b2D94   LDA f3E60,X
-        TAY 
+        TAY
         LDA pulsingColorArray,Y
         STA colorToDraw
-        LDA f2D65,Y
+        LDA spinningDroidAnimation,Y
         STA charToDraw
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         JMP DrawCharacter
 
 ;------------------------------------------------
 ; s2DAF
 ;------------------------------------------------
-s2DAF    
-        LDA f3EC0,X
+s2DAF
+        LDA enemyCharArray,X
         BNE b2DCB
         LDA #$80
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
         JSR UpdateScrPtrYPosWithX
         AND #$01
-        CLC 
+        CLC
         ADC #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         LDA #$01
         STA a51
-        JMP j2DCF
+        JMP DrawZappers
 
 b2DCB   LDA #$00
         STA a51
+
 ;-------------------------------
-; j2DCF
+; DrawZappers
+;
+; CHARACTER $1F - Horizontal zap    CHARACTER $23 - Vertical zap
+; 00000000                          00010000      *
+; 00000000                          00001000       *
+; 00100000     *                    00000100        *
+; 01100010    **   *                00011000      **
+; 10100101   * *  * *               00100000     *
+; 00111000     ***                  00010000      *
+; 00100000     *                    00001000       *
+; 00000000                          00001000       *
 ;-------------------------------
-j2DCF    
-        LDA f3E20,X
+DrawZappers
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA #$01
         STA colorToDraw
-        LDA f3EC0,X
+        LDA enemyCharArray,X
         CMP #$02
         BEQ b2E10
         LDA #$20
         STA charToDraw
         LDA a51
         BEQ b2DF0
-        LDA #$1F
+        LDA #$1F ; Horizontal zap character
         STA charToDraw
 b2DF0   LDA #$01
         STA screenPtrXPos
@@ -3104,7 +3115,7 @@ b2DF4   JSR DrawCharacter
         LDA screenPtrXPos
         CMP #$17
         BNE b2DF4
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         CMP a17
         BEQ b2E0D
         CMP a15
@@ -3117,40 +3128,38 @@ b2E10   LDA #$20
         STA charToDraw
         LDA a51
         BEQ b2E1C
-        LDA #>p2301
+        LDA #$23 ; Vertical zap character
         STA charToDraw
-b2E1C   LDA #<p2301
+b2E1C   LDA #$01
         STA screenPtrYPPos
 b2E20   JSR DrawCharacter
         INC screenPtrYPPos
         LDA screenPtrYPPos
         CMP #$1B
         BNE b2E20
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         CMP a12
         BEQ b2E0D
         CMP a10
         BEQ b2E0D
-;-------------------------------
-; j2E36
-;-------------------------------
-j2E36    
+
+j2E36
         LDA f3EA0,X
         CMP #$01
         BEQ b2E43
         LDA #$02
         STA f3EA0,X
-        RTS 
+        RTS
 
 b2E43   LDA #$00
-        STA f3EC0,X
+        STA enemyCharArray,X
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
-        RTS 
+        RTS
 
 ;-------------------------------
 ; LevelCompleteSequence
 ;-------------------------------
-LevelCompleteSequence    
+LevelCompleteSequence
         LDX #$00
 b2E4E   LDA f3E00,X
         BEQ b2E5C
@@ -3158,9 +3167,9 @@ b2E4E   LDA f3E00,X
         BEQ b2E5C
         CMP #$08
         BEQ b2E5C
-        RTS 
+        RTS
 
-b2E5C   INX 
+b2E5C   INX
         CPX #$20
         BNE b2E4E
         JSR s27DA
@@ -3187,13 +3196,13 @@ b2E84   LDA txtAttackWaveZapped,X
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$15
         BNE b2E84
 
         ;Wait a little while.
         LDX a32
-        INX 
+        INX
 b2E9C   INC WaitCtr1
         LDA WaitCtr1
         CMP #$3A
@@ -3201,7 +3210,7 @@ b2E9C   INC WaitCtr1
         LDA #$30
         STA WaitCtr1
         INC WaitCtr2
-b2EAE   DEX 
+b2EAE   DEX
         BNE b2E9C
 
         LDA dsplyZapsLeft
@@ -3209,11 +3218,11 @@ b2EAE   DEX
         BNE b2EBB
         JMP IncrementLivesPlaySound
 
-b2EBB   PHA 
+b2EBB   PHA
 b2EBC   LDY #$04
         LDX a32
-        INX 
-        TXA 
+        INX
+        TXA
         JSR s2F4A
 
         LDA #$02
@@ -3221,7 +3230,7 @@ b2EBC   LDY #$04
 b2EC9   LDA #$FC
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
 b2ECE   LDY #$C0
-b2ED0   DEY 
+b2ED0   DEY
         BNE b2ED0
         DEC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
@@ -3234,10 +3243,10 @@ b2ED0   DEY
         LDA dsplyZapsLeft
         CMP #$30
         BNE b2EBC
-        PLA 
+        PLA
         STA dsplyZapsLeft
 
-IncrementLivesPlaySound    
+IncrementLivesPlaySound
         LDA dsplyZapsLeft
         CMP #$39
         BEQ b2F03
@@ -3252,7 +3261,7 @@ b2F03   LDA #$0F
 b2F08   LDA #$FC
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
 b2F0D   LDY #$00
-b2F0F   DEY 
+b2F0F   DEY
         BNE b2F0F
         DEC VICCRA   ;$900A - frequency of sound osc.1 (bass)
         LDA VICCRA   ;$900A - frequency of sound osc.1 (bass)
@@ -3261,7 +3270,7 @@ b2F0F   DEY
         LDA #$FF
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
 b2F21   LDY #$00
-b2F23   DEY 
+b2F23   DEY
         BNE b2F23
         DEC VICCRA   ;$900A - frequency of sound osc.1 (bass)
         LDA VICCRA   ;$900A - frequency of sound osc.1 (bass)
@@ -3276,14 +3285,14 @@ b2F23   DEY
         STA VICCRE   ;$900E - sound volume
         INC a32
         LDX #$F8
-        TXS 
+        TXS
         JMP EnterNextLevel
 
 ;------------------------------------------------
 ; s2F4A
 ;------------------------------------------------
-s2F4A    
-        PHA 
+s2F4A
+        PHA
         JMP b2D1D
 
 txtAttackWaveZapped   .TEXT "ATTACK WAVE 00 ZAPPED"
@@ -3382,12 +3391,12 @@ txtAttackWaveZapped   .TEXT "ATTACK WAVE 00 ZAPPED"
 ;------------------------------------------------
 ; s3241
 ;------------------------------------------------
-s3241    
+s3241
         LDA #$01
         STA colorToDraw
         LDA a36
         BEQ b324A
-        RTS 
+        RTS
 
 b324A   LDA #>p0C03
         STA screenPtrYPPos
@@ -3399,11 +3408,11 @@ b3254   LDA txtAttackSequence,X
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$12
         BNE b3254
         LDX a32
-        INX 
+        INX
 b3268   INC a1140
         LDA a1140
         CMP #$3A
@@ -3411,51 +3420,72 @@ b3268   INC a1140
         LDA #$30
         STA a1140
         INC a113F
-b327A   DEX 
+b327A   DEX
         BNE b3268
-        JMP j38EB
+        JMP DrawPlayerOneTwo
 
 txtAttackSequence   .TEXT "ATTACK SEQUENCE 00"
+
 ;-------------------------------
-; j3292
+; AnimateGoat
+;
+; CHARACTER $ad
+; 00011000      **
+; 00000110        **
+; 00000011         **
+; 00000110        **
+; 11111100   ******
+; 01111100    *****
+; 10000100   *    *
+; 10000010   *     *
+;
+; CHARACTER $3b       CHARACTER $3c     
+; 00000000            00000000
+; 11100100   ***  *   01000100    *   *
+; 10001010   *   * *  10101010   * * * *
+; 11001010   **  * *  10101010   * * * *
+; 00101010     * * *  10101010   * * * *
+; 11000100   **   *   01000100    *   *
+; 00000000            00000000
+; 00000000            00000000
 ;-------------------------------
-j3292    
-        INC f3EC0,X
-        LDA f3EC0,X
+AnimateGoat
+        INC enemyCharArray,X
+        LDA enemyCharArray,X
         AND #$01
-        STA f3EC0,X
+        STA enemyCharArray,X
         BNE b32C6
         LDA f3EA0,X
         AND #$80
         BNE b32C6
-        LDA f3E20,X
+        LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA #$20
         STA charToDraw
         JSR DrawCharacter
-        INC f3E20,X
-        LDA f3E20,X
+        INC enemyXPosArray,X
+        LDA enemyXPosArray,X
         CMP #$17
         BNE b32C6
         LDA #$90
         STA f3EA0,X
-b32C6   LDA f3E20,X
+b32C6   LDA enemyXPosArray,X
         STA screenPtrXPos
-        LDA f3E40,X
+        LDA enemyYPosArray,X
         STA screenPtrYPPos
         LDA f3EA0,X
         AND #$80
         BEQ b330E
-        LDA #$3C
+        LDA #$3C ; '00' 
         STA charToDraw
         DEC f3EA0,X
         LDA f3EA0,X
         CMP #$7F
         BEQ b32F0
         AND #$07
-        TAY 
+        TAY
         LDA pulsingColorArray,Y
         STA colorToDraw
         JMP j3304
@@ -3469,26 +3499,24 @@ b32F0   LDA #$00
         LDY #$03
         LDA a51
         JSR s2F4A
-;-------------------------------
-; j3304
-;-------------------------------
-j3304    
+
+j3304
         JSR DrawCharacter
-        DEC charToDraw
+        DEC charToDraw ; '50'
         DEC screenPtrXPos
         JMP DrawCharacter
 
-b330E   LDA f3EC0,X
+b330E   LDA enemyCharArray,X
         BNE b331E
-        LDA #>p01AD
+        LDA #$01
         STA colorToDraw
-        LDA #<p01AD
+        LDA #$AD
         STA charToDraw
         JMP DrawCharacter
 
-b331E   LDA #<p01AE
+b331E   LDA #$AE ; Goat
         STA charToDraw
-        LDA #>p01AE
+        LDA #$01
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
@@ -3536,7 +3564,7 @@ b335A   JSR PaintInterstitialEffect
         BNE b335A
         LDA #$00
         STA VICCRA   ;$900A - frequency of sound osc.1 (bass)
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; PaintInterstitialEffect
@@ -3544,25 +3572,25 @@ b335A   JSR PaintInterstitialEffect
 PaintInterstitialEffect
         LDA a52
         AND #$07
-        TAX 
+        TAX
         LDA pulsingColorArray,X
         STA colorToDraw
         LDA a50
         STA screenPtrXPos
         LDX a54
-        TXA 
+        TXA
         AND #$80
         BNE b33A2
 b338C   LDA a51
         STA screenPtrYPPos
         JSR DrawCharacter
         LDA #$1B
-        SEC 
+        SEC
         SBC a51
         STA screenPtrYPPos
         JSR DrawCharacter
         INC screenPtrXPos
-        DEX 
+        DEX
         BNE b338C
 b33A2   LDA a51
         STA screenPtrYPPos
@@ -3571,21 +3599,21 @@ b33A8   LDA a50
         STA screenPtrXPos
         JSR DrawCharacter
         LDA #$18
-        SEC 
+        SEC
         SBC a51
         STA screenPtrXPos
         JSR DrawCharacter
         INC screenPtrYPPos
-        DEX 
+        DEX
         BNE b33A8
         LDA a51
-        CLC 
-        LSR 
+        CLC
+        LSR
         STA VICCRE   ;$900E - sound volume
         LDA #$E0
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
 b33CA   LDY #$C0
-b33CC   DEY 
+b33CC   DEY
         BNE b33CC
         INC VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         LDA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
@@ -3594,7 +3622,7 @@ b33CC   DEY
         LDA #$0F
         STA VICCRC   ;$900C - frequency of sound osc.3 (soprano)
         STA VICCRE   ;$900E - sound volume
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; DrawGameOver
@@ -3608,11 +3636,11 @@ DrawGameOver
 b33ED   STX a51
         LDA txtGameOver,X
         AND #$3F
-        TAX 
+        TAX
         JSR MaterializeCharEffect
         INC pulsingColorArrayIndex
         LDX a51
-        INX 
+        INX
         CPX #$09
         BNE b33ED
         STX VICCRD   ;$900D - frequency of sound osc.4 (noise)
@@ -3621,12 +3649,12 @@ b33ED   STX a51
         JSR PlayNewLevelSounds
         JSR PulsingTextColorEffect
         JSR DrawScreenInterstitialEffect
-        JSR s38D5
+        JSR MaybeLoadHiScoreScreen
 ;-------------------------------
 ; j3414
 ;-------------------------------
-j3414    
-        NOP 
+j3414
+        NOP
 
 ;------------------------------------------------
 ; RunTitleSequence
@@ -3636,12 +3664,12 @@ RunTitleSequence
 ;-------------------------------
 ; j3418
 ;-------------------------------
-j3418    
+j3418
         LDA #$00
         STA a36
         STA a32
         LDX #$F8
-        TXS 
+        TXS
         JSR DrawScreenInterstitialEffect
         JSR DrawTitleScreen2
         JMP RunTitleSequenceLoop
@@ -3680,7 +3708,7 @@ b3439   LDA #$02
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$17
         BNE b3439
         LDA #$01
@@ -3692,7 +3720,7 @@ b3481   LDA #$06
         STA screenPtrXPos
         LDA a51
         EOR #$07
-        TAX 
+        TAX
         LDA pulsingColorArray,X
         STA colorToDraw
         LDA #$07
@@ -3702,7 +3730,7 @@ b3493   LDA highScoreTableStorage,Y
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INY 
+        INY
         DEC a50
         BNE b3493
         INC screenPtrXPos
@@ -3716,7 +3744,7 @@ b34B0   LDA highScoreTableStorage,Y
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INY 
+        INY
         DEC a50
         BNE b34B0
         INC screenPtrYPPos
@@ -3730,64 +3758,63 @@ b34B0   LDA highScoreTableStorage,Y
 titleScreen2Text1   .TEXT "THE DEMONS OF HELLGATE:"
 titleScreen2Text2   .TEXT " GUARDIANS OF THE GATE "
 titleScreen2Text3   .TEXT "  PRESS FIRE TO BEGIN  "
+
 ;-------------------------------
-; j3515
+; DisplayHiScoreScreen
 ;-------------------------------
-j3515    
+DisplayHiScoreScreen
         LDY #$00
         LDX #$00
         LDA #$00
         STA a54
         LDA a36
         BEQ b3522
-        RTS 
+        RTS
 
-b3522   TXA 
-        PHA 
-b3524   LDA (p23),Y
+b3522   TXA
+        PHA
+b3524   LDA (a23),Y
         CMP highScoreTableStorage,X
         BEQ b3530
         BMI b3536
         JMP j3546
 
-b3530   INX 
-        INY 
+b3530   INX
+        INY
         CPY #$07
         BNE b3524
+
 b3536   LDY #$00
-        PLA 
-        CLC 
+        PLA
+        CLC
         ADC #$0A
-        TAX 
+        TAX
         INC a54
         LDA a54
         CMP #$07
         BNE b3522
-        RTS 
+        RTS
 
-;-------------------------------
-; j3546
-;-------------------------------
-j3546    
-        PLA 
+j3546
+        PLA
         STA a53
-        CLC 
+        CLC
         ADC #$0A
         STA screenPtrXPos
         LDY #$4F
         LDX #$45
 b3552   LDA highScoreTableStorage,X
         STA highScoreTableStorage,Y
-        DEY 
-        DEX 
+        DEY
+        DEX
         CPX a53
         BNE b3552
         LDX a53
         LDY #$00
-b3562   LDA (p23),Y
+b3562   LDA (a23),Y
         STA highScoreTableStorage,X
-        INX 
-        INY 
+        INX
+        INY
         CPY #$07
         BNE b3562
         STX a53
@@ -3795,27 +3822,27 @@ b3562   LDA (p23),Y
         STA highScoreTableStorage,X
         STA f3D01,X
         STA f3D02,X
-        LDA a37
+        LDA currentPlayer
         BEQ b359A
         LDA a54
-        PHA 
+        PHA
         LDA a53
-        PHA 
+        PHA
         JSR DrawScreenInterstitialEffect
-        JSR j38EB
+        JSR DrawPlayerOneTwo
         LDA #$07
         STA pulsingColorArrayIndex
         JSR PulsingTextColorEffect
         JSR DrawScreenInterstitialEffect
-        PLA 
+        PLA
         STA a53
-        PLA 
+        PLA
         STA a54
 b359A   JSR DrawTitleScreen2
         LDA a54
-        CLC 
-        ASL 
-        CLC 
+        CLC
+        ASL
+        CLC
         ADC #$06
         STA screenPtrYPPos
         LDA #$11
@@ -3824,7 +3851,7 @@ b359A   JSR DrawTitleScreen2
         STA colorToDraw
         LDA a33
         STA a55
-        JSR s35E3
+        JSR InputHiScoreName
         LDA a55
         STA a33
         LDX a53
@@ -3832,7 +3859,7 @@ b359A   JSR DrawTitleScreen2
         INC a53
         LDA a34
         STA a55
-        JSR s35E3
+        JSR InputHiScoreName
         LDA a55
         STA a34
         LDX a53
@@ -3840,17 +3867,17 @@ b359A   JSR DrawTitleScreen2
         INC a53
         LDA a35
         STA a55
-        JSR s35E3
+        JSR InputHiScoreName
         LDA a55
         STA a35
         LDX a53
         STA highScoreTableStorage,X
-        RTS 
+        RTS
 
 ;------------------------------------------------
-; s35E3
+; InputHiScoreName
 ;------------------------------------------------
-s35E3    
+InputHiScoreName
         LDA a55
         AND #$1F
         STA charToDraw
@@ -3860,7 +3887,7 @@ s35E3
         STA colorToDraw
         JSR DrawCharacter
         LDX #$80
-        JSR s3628
+        JSR WaitInHiScoreScreen
         JSR GetJoystickInput
         LDA joystickInput
         AND #$04
@@ -3873,7 +3900,7 @@ b3604   LDA joystickInput
 b360C   LDA joystickInput
         AND #$80
         BNE b3615
-        JMP s35E3
+        JMP InputHiScoreName
 
 b3615   LDA a55
         AND #$1F
@@ -3884,16 +3911,17 @@ b3615   LDA a55
         JSR DrawCharacter
         INC screenPtrXPos
         LDX #$00
+
 ;------------------------------------------------
-; s3628
+; WaitInHiScoreScreen
 ;------------------------------------------------
-s3628    
+WaitInHiScoreScreen
         LDY #$00
-b362A   DEY 
+b362A   DEY
         BNE b362A
-        DEX 
-        BNE s3628
-        RTS 
+        DEX
+        BNE WaitInHiScoreScreen
+        RTS
 
 ;------------------------------------------------
 ; DrawTitleScreen
@@ -3995,7 +4023,7 @@ DrawPattern
         LDA screenPtrXPos
         CMP #$19
         BNE b36F9
-        RTS 
+        RTS
 
 b36F9   INC charToDraw
         JSR DrawCharacter
@@ -4022,7 +4050,7 @@ b3711   JSR DrawCharacter
         LDA screenPtrYPPos
         CMP #$11
         BNE b370D
-        RTS 
+        RTS
 
 ;------------------------------------------------
 ; DrawTitleScreenText
@@ -4062,7 +4090,7 @@ DrawTitleScreenText
         STA colorToDraw
         LDA #$00
         STA screenPtrXPos
-        TAX 
+        TAX
 b3770   LDA #$04
         STA screenPtrYPPos
         LDA copyrightText,X
@@ -4076,7 +4104,7 @@ b3770   LDA #$04
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$19
         BNE b3770
         LDA #$00
@@ -4097,7 +4125,7 @@ b379D   JSR GetJoystickInput
         BNE b3799
 b37B4   LDA #$08
         STA VICCRF   ;$900F - screen colors: background, border & inverse
-        RTS 
+        RTS
 
 copyrightText   .TEXT "COPYRIGHT: LLAMASOFT 1984"
 titleScreenText   .TEXT " HELLGATE BY JEFF MINTER "
@@ -4123,12 +4151,12 @@ b37F6   JSR GetJoystickInput
 
 b380A   CMP #$2F
         BNE b3822
-        INC a37
-        LDA a37
+        INC currentPlayer
+        LDA currentPlayer
         AND #$01
-        STA a37
+        STA currentPlayer
 
-j3816    
+j3816
         JSR DrawTitleScreen2
 b3819   LDA aC5
         CMP #$40
@@ -4146,18 +4174,18 @@ b3822   LDA joystickInput
         BNE b37F0
         LDA #$01
         STA a36
-b3838   JMP j1B2E
+b3838   JMP SetupGameScreen
 
 ;------------------------------------------------
 ; ResetGameVariables
 ;------------------------------------------------
-ResetGameVariables    
-        NOP 
+ResetGameVariables
+        NOP
         LDX #$07
         LDA #$07
 b3840   STA f96E6,X
         STA f96D4,X
-        DEX 
+        DEX
         BNE b3840
 
         STX a1A
@@ -4171,32 +4199,32 @@ b3840   STA f96E6,X
 b3858   LDA #$D5
         STA a23
 
-j385C    
+j385C
         LDA dsplyZapsLeft
-        PHA 
+        PHA
         LDA zapsLeft
         STA dsplyZapsLeft
-        PLA 
+        PLA
         STA zapsLeft
-        LDA dsplyShipsLeft
-        PHA 
+        LDA dsplyLaserheadsLeft
+        PHA
         LDA shipsLeft
-        STA dsplyShipsLeft
-        PLA 
+        STA dsplyLaserheadsLeft
+        PLA
         STA shipsLeft
         LDA a32
-        PHA 
+        PHA
         LDA a38
         STA a32
-        PLA 
+        PLA
         STA a38
-        INC a37
-        LDA a37
+        INC currentPlayer
+        LDA currentPlayer
         CMP #$03
         BNE b388A
         LDA #$01
-        STA a37
-b388A   RTS 
+        STA currentPlayer
+b388A   RTS
 
 ;------------------------------------------------
 ; DrawEntryPlayersText
@@ -4214,74 +4242,79 @@ b3895   LDA entryPlayersText,X
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$19
         BNE b3895
         LDA #$31
-        CLC 
+        CLC
         ADC a32
         STA dsplyEntryLevel
-        LDA a37
+        LDA currentPlayer
         BEQ b38BB
         LDA #$32
         STA dsplyPlayers
-b38BB   RTS 
+b38BB   RTS
 
 entryPlayersText   .TEXT "ENTRY LEVEL:0   PLAYERS:1"
 
 ;------------------------------------------------
-; s38D5
+; MaybeLoadHiScoreScreen
 ;------------------------------------------------
-s38D5    
-        LDA a37
+MaybeLoadHiScoreScreen
+        LDA currentPlayer
         BNE b38DC
-        JMP j3515
+        JMP DisplayHiScoreScreen
 
 b38DC   JSR ResetGameVariables
-        JSR j3515
+        JSR DisplayHiScoreScreen
         JSR ResetGameVariables
-        JSR j3515
+        JSR DisplayHiScoreScreen
         JMP ResetGameVariables
 
 ;-------------------------------
-; j38EB
+; DrawPlayerOneTwo
 ;-------------------------------
-j38EB    
+DrawPlayerOneTwo
         LDX #$00
         LDA #>p0A07
         STA screenPtrYPPos
         LDA #<p0A07
         STA screenPtrXPos
-        LDA a37
+        LDA currentPlayer
         BNE b38FA
-        RTS 
+        RTS
 
 b38FA   LDA txtPlayerOneTwo,X
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
+        INX
         CPX #$07
         BNE b38FA
-        LDA a37
+
+        LDA currentPlayer
         CMP #$02
         BNE b3914
-        INX 
-        INX 
-        INX 
+        ; It's player two, skip to text for 'TWO'
+        INX
+        INX
+        INX
+
+        ; Write 'ONE' or 'TWO'
 b3914   LDY #$03
 b3916   LDA txtPlayerOneTwo,X
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
         INC screenPtrXPos
-        INX 
-        DEY 
+        INX
+        DEY
         BNE b3916
-        RTS 
+        RTS
 
 txtPlayerOneTwo   .TEXT "PLAYER ONETWO"
+
         .BYTE $32,$20,$20,$2E,$BC,$53,$42,$42
         .BYTE $4D,$20,$20,$2E,$C9,$53,$42,$42
         .BYTE $4F,$4E,$20,$2E,$BB,$53,$42,$49
