@@ -68,7 +68,6 @@ function Vic6560(machine) {
         if (this.audioContext) {
             if (this.audioContext.state == 'suspended') {
                 this.audioContext.resume();
-                document.getElementById("audioContextMessage").style.display = "none";
             }
         }
     }
