@@ -17,8 +17,8 @@ a08 = $08
 a09 = $09
 a0A = $0A
 a0B = $0B
-a0E = $0E
-a0F = $0F
+dsplyCurScoreClrPtrLo = $0E
+dsplyCurScoreClrPtrHi = $0F
 a10 = $10
 a11 = $11
 a12 = $12
@@ -37,9 +37,9 @@ a1E = $1E
 a1F = $1F
 a20 = $20
 a21 = $21
-a22 = $22
-a23 = $23
-a24 = $24
+previousColorPulse = $22
+dsplyCurScorePtrLo = $23
+dsplyCurScorePtrHi = $24
 a26 = $26
 a27 = $27
 a28 = $28
@@ -56,15 +56,15 @@ a32 = $32
 a33 = $33
 a34 = $34
 a35 = $35
-a36 = $36
+inAttractMode = $36
 currentPlayer = $37
 a38 = $38
 shipsLeft = $39
 zapsLeft = $3A
 a50 = $50
-a51 = $51
-a52 = $52
-a53 = $53
+sequenceTimer1 = $51
+titleSequenceTimer2 = $52
+sequenceTimer3 = $53
 a54 = $54
 a55 = $55
 aC5 = $C5
@@ -94,7 +94,7 @@ bulletXPosArray = $3FC0
 bulletYPosArray = $3FD0
 f3FE0 = $3FE0
 bulletCharArray = $3FF0
-f96BE = $96BE
+dsplyPlasmoZapsLabel = $96BE
 f96D4 = $96D4
 f96DC = $96DC
 f96E1 = $96E1
@@ -141,7 +141,6 @@ dsplyPlayers    = SCREEN_RAM + $270
 dsplyZapsLeft   = SCREEN_RAM + $2C2
 dsplyLaserheadsLeft  = SCREEN_RAM + $2D4
 dsplyEnergyBar  = SCREEN_RAM + $2C3
-p12D5           = SCREEN_RAM + $2D5
 
 p4C0B = $4C0B
 p6301 = $6301
@@ -288,7 +287,8 @@ DrawCharacter
 ;------------------------------------------------
 ; ClearScreen
 ;------------------------------------------------
-ClearScreen   LDX #$00
+ClearScreen
+        LDX #$00
 b1A6C   LDA #$20
         STA SCREEN_RAM,X
         STA SCREEN_RAM + $100,X
@@ -311,25 +311,26 @@ highScoreTable .TEXT "0010000LLA0009000MA 0008000YAK0007000DOE"
 InitializeAudioAndVideo
         JSR InitScreenPtrArray
         JSR ClearScreen
-        LDA #<p0119
+        LDA #$19
         STA a33
-        LDA #>p0119
+        LDA #$01
         STA a34
-        LDA #<p0B
-        STA a35
 
-        LDX #>p0B
-        STX a36
+        LDA #$0B
+        STA a35
+        LDX #$00
+        STX inAttractMode
+
 b1AE8   LDA highScoreTable,X
         STA highScoreTableStorage,X
         INX
         CPX #$50
         BNE b1AE8
 
-        LDA #<p12D5
-        STA a23
-        LDA #>p12D5
-        STA a24
+        LDA #$D5
+        STA dsplyCurScorePtrLo
+        LDA #$12
+        STA dsplyCurScorePtrHi
         LDA #$08
         STA VICCRF   ;$900F - screen colors: background, border & inverse
 
@@ -355,11 +356,11 @@ b1AE8   LDA highScoreTable,X
         LDA #$0A
         STA VICCR0   ;$9000 - left edge of picture & interlace switch
 
-        ; Set the IRQ interrupt handlet to InterruptHandler
+        ; Set the IRQ interrupt handlet to ColorPulseScoreAndPlasmoLabel
         SEI
-        LDA #<InterruptHandler
+        LDA #<ColorPulseScoreAndPlasmoLabel
         STA RAM_CINV
-        LDA #>InterruptHandler
+        LDA #>ColorPulseScoreAndPlasmoLabel
         STA RAM_CINV + $01
         CLI
 
@@ -376,7 +377,7 @@ b1AE8   LDA highScoreTable,X
 SetupGameScreen
         JSR DrawScreenInterstitialEffect
         JSR DrawLaserBasesAndStrapLine
-        LDA a36
+        LDA inAttractMode
         BEQ b1B3F
         JSR UpdateScrPtrYPosWithX
         AND #$0F
@@ -401,7 +402,7 @@ EnterNextLevel
 
         LDA #$01
         STA a21
-        STA a22
+        STA previousColorPulse
         STA a20
 
         LDA #$00
@@ -429,7 +430,7 @@ b1B80   JSR WasteSomeCycles
         JSR WasteSomeCycles
 
 b1B8B   JSR PrepareToDieNewLevelEffect
-        JSR s1C6A
+        JSR SetUpAliensAndLaserheads
         JMP MainGameLoop
 
 ;------------------------------------------------
@@ -475,11 +476,11 @@ b1BBE   LDA #<p0200
         BNE b1BBE
 
         ; Draw straplines
-        LDA #>p1C00
+        LDA #$1C
         STA screenPtrYPPos
-        LDA #<p1C00
+        LDA #$00
         STA screenPtrXPos
-        LDA a36
+        LDA inAttractMode
         BNE b1C0B
         LDX #$00
 b1BE8   LDA scoreLineText1,X
@@ -492,12 +493,10 @@ b1BE8   LDA scoreLineText1,X
         LDA scoreLineText2,X
         AND #$3F
         STA charToDraw
-p1C00   =*+$01
         JSR DrawCharacter
         DEC screenPtrYPPos
         INC screenPtrXPos
         INX
-p1C08   =*+$01
         CPX #$19
         BNE b1BE8
 b1C0B   JSR ResetEnergyBar
@@ -535,9 +534,9 @@ InitializeGameVariables
         RTS
 
 ;------------------------------------------------
-; s1C6A
+; SetUpAliensAndLaserheads
 ;------------------------------------------------
-s1C6A
+SetUpAliensAndLaserheads
         LDA #$A0
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         JSR PerformAlienAnimation
@@ -552,6 +551,7 @@ b1C76   STA f3E00,X
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
         JSR MoveLaserheads
         JMP PlayNewLevelSounds
+        ;Returns
 
 ;------------------------------------------------
 ; MoveLaserheads
@@ -725,7 +725,7 @@ b1D9E   TAY
         ROR
         EOR #$8F
         STA joystickInput
-        LDA a36
+        LDA inAttractMode
         BEQ b1DBB
         LDA joystickInput
         AND #$80
@@ -1385,9 +1385,10 @@ b21F7   DEY
         RTS
 
 ;------------------------------------------------
-; Looks like an interrupt handler
+; ColorPulseScoreAndPlasmoLabel
+; Called from the interrupt handler.
 ;------------------------------------------------
-InterruptHandler
+ColorPulseScoreAndPlasmoLabel
         LDX #$04
 b221A   INC f96DC,X
         LDA f96DC,X
@@ -1407,34 +1408,42 @@ b221A   INC f96DC,X
 
 b223D   LDA #$07
         STA a21
-        INC a22
-        LDA a22
-        AND #$07
-        STA a22
-        TAX
-        LDA a23
-        STA a0E
-        LDA a24
-        CLC
-        ADC #$84
-        STA a0F
 
+        ; Cycle to the next color in the color array.
+        INC previousColorPulse
+        LDA previousColorPulse
+        AND #$07
+        STA previousColorPulse
+        TAX
+
+        ; Get the address of the current score in the
+        ; COLOR memory ($9600 - $97FF).
+        LDA dsplyCurScorePtrLo
+        STA dsplyCurScoreClrPtrLo
+        LDA dsplyCurScorePtrHi
+        CLC
+        ADC #$84 ; Adding $84 to $12 gets us to $96
+        STA dsplyCurScoreClrPtrHi
+
+        ; Now update the color at that position. By being
+        ; called at every interrupt this creates a glowing
+        ; effect.
         LDY #$00
         LDA pulsingColorArray,X
-b225A   STA (a0E),Y
+b225A   STA (dsplyCurScoreClrPtrLo),Y
         INY
         CPY #$08
         BNE b225A
 
-        LDA a22
+        LDA previousColorPulse
         EOR #$07
         TAX
         LDA pulsingColorArray,X
-
         LDY #$03
-b226B   STA f96BE,Y
+b226B   STA dsplyPlasmoZapsLabel,Y
         DEY
         BNE b226B
+
         JMP ROM_IRQ  ;$EABF - IRQ interrupt handler
 
 f2274   .BYTE $00,$04,$20,$1E,$10,$14,$0A,$0A
@@ -2176,7 +2185,7 @@ b27C0   JMP DrawCharacter
 
 b27C3   JMP j288A
 
-b27C6   LDA a36
+b27C6   LDA inAttractMode
         BNE b27C3
 
         LDA dsplyZapsLeft
@@ -2242,7 +2251,7 @@ b2838   DEY
         LDA a09
         CMP #$23
         BNE b27F5
-        LDA a36
+        LDA inAttractMode
         BEQ b2850
         JMP j3414
 
@@ -2313,12 +2322,12 @@ RestartLevel
         JSR PlayLevelStartSounds
 
         LDX #$00
-        STX a51
+        STX sequenceTimer1
 b28A3   LDA f3E00,X
         BEQ b28C3
         CMP #$07
         BNE b28AE
-        INC a51
+        INC sequenceTimer1
 b28AE   LDA #$10
         STA f3E00,X
         STA f3EA0,X
@@ -2415,9 +2424,9 @@ b2943   PLA
 ; ResetEnergyBar
 ;------------------------------------------------
 ResetEnergyBar
-        LDA #>p1C08
+        LDA #$1C
         STA screenPtrYPPos
-        LDA #<p1C08
+        LDA #$08
         STA screenPtrXPos
         LDX #$00
 b2955   LDA f296E,X
@@ -2442,7 +2451,7 @@ f297F   .BYTE $05,$05,$05,$05,$05,$05,$05,$05
 ; AdvanceAlienAnimation
 ;------------------------------------------------
 AdvanceAlienAnimation
-        LDA a51
+        LDA sequenceTimer1
         BNE b2993
         RTS
 
@@ -2460,7 +2469,7 @@ b2993   JSR UpdateScrPtrYPosWithX
         LDA #$07
         STA screenPtrXPos
         JSR j2710
-        DEC a51
+        DEC sequenceTimer1
         BNE b2993
         RTS
 
@@ -2763,7 +2772,7 @@ PrepareToDieNewLevelEffect
         LDA #<p0505
         STA pulsingColorArrayIndex
         LDX #$00
-        LDA a36
+        LDA inAttractMode
         BEQ b2B9F
         RTS
 
@@ -2975,21 +2984,21 @@ s2D0D
         TAX
 b2D1D   TYA
         PHA
-        LDA a36
+        LDA inAttractMode
         BEQ b2D27
         PLA
         PLA
         TAX
         RTS
 
-b2D27   LDA (a23),Y
+b2D27   LDA (dsplyCurScorePtrLo),Y
         CLC
         ADC #$01
-        STA (a23),Y
+        STA (dsplyCurScorePtrLo),Y
         CMP #$3A
         BNE b2D39
         LDA #$30
-        STA (a23),Y
+        STA (dsplyCurScorePtrLo),Y
         DEY
         BNE b2D27
 b2D39   PLA
@@ -3073,11 +3082,11 @@ s2DAF
         ADC #$01
         STA enemyCharArray,X
         LDA #$01
-        STA a51
+        STA sequenceTimer1
         JMP DrawZappers
 
 b2DCB   LDA #$00
-        STA a51
+        STA sequenceTimer1
 
 ;-------------------------------
 ; DrawZappers
@@ -3104,7 +3113,7 @@ DrawZappers
         BEQ b2E10
         LDA #$20
         STA charToDraw
-        LDA a51
+        LDA sequenceTimer1
         BEQ b2DF0
         LDA #$1F ; Horizontal zap character
         STA charToDraw
@@ -3126,7 +3135,7 @@ b2E0D   JMP PlayerKilled
 
 b2E10   LDA #$20
         STA charToDraw
-        LDA a51
+        LDA sequenceTimer1
         BEQ b2E1C
         LDA #$23 ; Vertical zap character
         STA charToDraw
@@ -3394,7 +3403,7 @@ txtAttackWaveZapped   .TEXT "ATTACK WAVE 00 ZAPPED"
 s3241
         LDA #WHITE
         STA colorToDraw
-        LDA a36
+        LDA inAttractMode
         BEQ b324A
         RTS
 
@@ -3494,10 +3503,10 @@ b32F0   LDA #BLACK
         STA colorToDraw
         LDA #$00
         STA f3E00,X
-        STX a51
+        STX sequenceTimer1
         LDX #$05
         LDY #$03
-        LDA a51
+        LDA sequenceTimer1
         JSR s2F4A
 
 j3304
@@ -3544,22 +3553,22 @@ p3334   JSR DrawInterstitial
 DrawInterstitial
         LDA #$0D
         STA a50
-        STA a51
-        LDA #<p0101
-        STA a52
-        LDA #>p0101
-        STA a53
+        STA sequenceTimer1
+        LDA #$01
+        STA titleSequenceTimer2
+        LDA #$01
+        STA sequenceTimer3
         LDA #$FF
         STA a54
 b335A   JSR PaintInterstitialEffect
         DEC a50
-        DEC a51
-        INC a52
-        INC a53
-        INC a53
+        DEC sequenceTimer1
+        INC titleSequenceTimer2
+        INC sequenceTimer3
+        INC sequenceTimer3
         INC a54
         INC a54
-        LDA a51
+        LDA sequenceTimer1
         CMP #$FF
         BNE b335A
         LDA #$00
@@ -3570,7 +3579,7 @@ b335A   JSR PaintInterstitialEffect
 ; PaintInterstitialEffect
 ;------------------------------------------------
 PaintInterstitialEffect
-        LDA a52
+        LDA titleSequenceTimer2
         AND #$07
         TAX
         LDA pulsingColorArray,X
@@ -3581,32 +3590,32 @@ PaintInterstitialEffect
         TXA
         AND #$80
         BNE b33A2
-b338C   LDA a51
+b338C   LDA sequenceTimer1
         STA screenPtrYPPos
         JSR DrawCharacter
         LDA #$1B
         SEC
-        SBC a51
+        SBC sequenceTimer1
         STA screenPtrYPPos
         JSR DrawCharacter
         INC screenPtrXPos
         DEX
         BNE b338C
-b33A2   LDA a51
+b33A2   LDA sequenceTimer1
         STA screenPtrYPPos
-        LDX a53
+        LDX sequenceTimer3
 b33A8   LDA a50
         STA screenPtrXPos
         JSR DrawCharacter
         LDA #$18
         SEC
-        SBC a51
+        SBC sequenceTimer1
         STA screenPtrXPos
         JSR DrawCharacter
         INC screenPtrYPPos
         DEX
         BNE b33A8
-        LDA a51
+        LDA sequenceTimer1
         CLC
         LSR
         STA VICCRE   ;$900E - sound volume
@@ -3633,13 +3642,13 @@ DrawGameOver
         STA pulsingColorArrayIndex
         STA a08
         LDX #$00
-b33ED   STX a51
+b33ED   STX sequenceTimer1
         LDA txtGameOver,X
         AND #$3F
         TAX
         JSR MaterializeCharEffect
         INC pulsingColorArrayIndex
-        LDX a51
+        LDX sequenceTimer1
         INX
         CPX #$09
         BNE b33ED
@@ -3666,7 +3675,7 @@ RunTitleSequence
 ;-------------------------------
 j3418
         LDA #$00
-        STA a36
+        STA inAttractMode
         STA a32
         LDX #$F8
         TXS
@@ -3712,13 +3721,13 @@ b3439   LDA #RED
         CPX #$17
         BNE b3439
         LDA #$01
-        STA a51
+        STA sequenceTimer1
         LDA #$06
         STA screenPtrYPPos
         LDY #$00
 b3481   LDA #$06
         STA screenPtrXPos
-        LDA a51
+        LDA sequenceTimer1
         EOR #$07
         TAX
         LDA pulsingColorArray,X
@@ -3749,8 +3758,8 @@ b34B0   LDA highScoreTableStorage,Y
         BNE b34B0
         INC screenPtrYPPos
         INC screenPtrYPPos
-        INC a51
-        LDA a51
+        INC sequenceTimer1
+        LDA sequenceTimer1
         CMP #$08
         BNE b3481
         JMP DrawEntryPlayersText
@@ -3767,13 +3776,13 @@ DisplayHiScoreScreen
         LDX #$00
         LDA #$00
         STA a54
-        LDA a36
+        LDA inAttractMode
         BEQ b3522
         RTS
 
 b3522   TXA
         PHA
-b3524   LDA (a23),Y
+b3524   LDA (dsplyCurScorePtrLo),Y
         CMP highScoreTableStorage,X
         BEQ b3530
         BMI b3536
@@ -3797,7 +3806,7 @@ b3536   LDY #$00
 
 j3546
         PLA
-        STA a53
+        STA sequenceTimer3
         CLC
         ADC #$0A
         STA screenPtrXPos
@@ -3807,17 +3816,17 @@ b3552   LDA highScoreTableStorage,X
         STA highScoreTableStorage,Y
         DEY
         DEX
-        CPX a53
+        CPX sequenceTimer3
         BNE b3552
-        LDX a53
+        LDX sequenceTimer3
         LDY #$00
-b3562   LDA (a23),Y
+b3562   LDA (dsplyCurScorePtrLo),Y
         STA highScoreTableStorage,X
         INX
         INY
         CPY #$07
         BNE b3562
-        STX a53
+        STX sequenceTimer3
         LDA #$00
         STA highScoreTableStorage,X
         STA f3D01,X
@@ -3826,7 +3835,7 @@ b3562   LDA (a23),Y
         BEQ b359A
         LDA a54
         PHA
-        LDA a53
+        LDA sequenceTimer3
         PHA
         JSR DrawScreenInterstitialEffect
         JSR DrawPlayerOneTwo
@@ -3835,7 +3844,7 @@ b3562   LDA (a23),Y
         JSR PulsingTextColorEffect
         JSR DrawScreenInterstitialEffect
         PLA
-        STA a53
+        STA sequenceTimer3
         PLA
         STA a54
 b359A   JSR DrawTitleScreen2
@@ -3854,23 +3863,23 @@ b359A   JSR DrawTitleScreen2
         JSR InputHiScoreName
         LDA a55
         STA a33
-        LDX a53
+        LDX sequenceTimer3
         STA highScoreTableStorage,X
-        INC a53
+        INC sequenceTimer3
         LDA a34
         STA a55
         JSR InputHiScoreName
         LDA a55
         STA a34
-        LDX a53
+        LDX sequenceTimer3
         STA highScoreTableStorage,X
-        INC a53
+        INC sequenceTimer3
         LDA a35
         STA a55
         JSR InputHiScoreName
         LDA a55
         STA a35
-        LDX a53
+        LDX sequenceTimer3
         STA highScoreTableStorage,X
         RTS
 
@@ -4108,10 +4117,10 @@ b3770   LDA #$04
         CPX #$19
         BNE b3770
         LDA #$00
-        STA a51
-        STA a36
+        STA sequenceTimer1
+        STA inAttractMode
 b3799   LDA #$00
-        STA a52
+        STA titleSequenceTimer2
 b379D   JSR GetJoystickInput
         LDA joystickInput
         AND #$80
@@ -4119,9 +4128,9 @@ b379D   JSR GetJoystickInput
         LDA aC5
         CMP #$40
         BNE b37B4
-        DEC a52
+        DEC titleSequenceTimer2
         BNE b379D
-        DEC a51
+        DEC sequenceTimer1
         BNE b3799
 b37B4   LDA #$08
         STA VICCRF   ;$900F - screen colors: background, border & inverse
@@ -4135,10 +4144,10 @@ titleScreenText   .TEXT " HELLGATE BY JEFF MINTER "
 ;------------------------------------------------
 RunTitleSequenceLoop
         LDA #$04
-        STA a53
+        STA sequenceTimer3
 b37F0   LDA #$00
-        STA a51
-        STA a52
+        STA sequenceTimer1
+        STA titleSequenceTimer2
 b37F6   JSR GetJoystickInput
         LDA aC5
         CMP #$27
@@ -4165,15 +4174,19 @@ b3819   LDA aC5
 
 b3822   LDA joystickInput
         AND #$80
-        BNE b3838
-        DEC a52
+        BNE b3838 ; Player pressed fire, start game
+
+        DEC titleSequenceTimer2
         BNE b37F6
-        DEC a51
+        DEC sequenceTimer1
         BNE b37F6
-        DEC a53
+        DEC sequenceTimer3
         BNE b37F0
+
+        ; Run a sequence in attract mode
         LDA #$01
-        STA a36
+        STA inAttractMode
+
 b3838   JMP SetupGameScreen
 
 ;------------------------------------------------
@@ -4189,15 +4202,15 @@ b3840   STA f96E6,X
         BNE b3840
 
         STX a1A
-        LDA a23
+        LDA dsplyCurScorePtrLo
         CMP #$D5
         BNE b3858
         LDA #$E7
-        STA a23
+        STA dsplyCurScorePtrLo
         JMP j385C
 
 b3858   LDA #$D5
-        STA a23
+        STA dsplyCurScorePtrLo
 
 j385C
         LDA dsplyZapsLeft
