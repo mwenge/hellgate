@@ -1,9 +1,9 @@
 ; Redundant data
         STY f3E,X
         CLV
-        SBC fCACB,X
+        SBC $CACB,X
         .BYTE $C2,$45 ;NOP #$45
-        JMP eDD8E
+        JMP $DD8E
 
         .BYTE $80,$E9,$9E,$AE,$CB,$CC,$8F,$8E
         .BYTE $C4,$E5,$C8,$C8,$C6,$CC,$8D,$CF

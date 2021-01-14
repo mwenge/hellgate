@@ -76,7 +76,6 @@ aC5 = $C5
 ;
 SCREEN_PTR_LO = $0340
 SCREEN_PTR_HI = $0360
-f1200 = $1200
 highScoreTableStorage = $3D00
 f3D01 = $3D01
 f3D02 = $3D02
@@ -100,7 +99,6 @@ f96DC = $96DC
 f96E1 = $96E1
 f96E6 = $96E6
 fC000 = $C000
-fCACB = $CACB
 ;
 ; **** ABSOLUTE ADRESSES ****
 ;
@@ -115,14 +113,9 @@ a96D3 = $96D3
 ;
 p02 = $0002
 p0B = $000B
-p0101 = $0101
-p0119 = $0119
-p01AD = $01AD
-p01AE = $01AE
 p0200 = $0200
 p0203 = $0203
 p0505 = $0505
-p066E = $066E
 p0900 = $0900
 p0901 = $0901
 p0A02 = $0A02
@@ -144,30 +137,19 @@ dsplyEnergyBar  = SCREEN_RAM + $2C3
 
 p4C0B = $4C0B
 p6301 = $6301
-p6D1B = $6D1B
-p7519 = $7519
 
 BLACK    = $00
 WHITE    = $01
 RED      = $02
 CYAN     = $03
 PURPLE   = $04
-GREEN    = $05
 BLUE     = $06
 YELLOW   = $07
-ORANGE   = $08
-LTORANGE = $09
-PINK     = $0A
-LTCYAN   = $0B
-LTPURPLE = $0C
-LTGREEN  = $0D
-LTBLUE   = $0E
 LTYELLOW = $0F
 
 ;
 ; **** EXTERNAL JUMPS ****
 ;
-eDD8E = $DD8E
 ;
 ; **** PREDEFINED LABELS ****
 ;
