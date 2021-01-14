@@ -442,7 +442,7 @@ DrawLaserBasesAndStrapLine
         STA screenPtrXPos
 b1B98   LDA #>p02
         STA screenPtrYPPos
-        LDA #$06
+        LDA #BLUE
         STA colorToDraw
         LDA #$6E ; Horizontal Base
         STA charToDraw
@@ -485,7 +485,7 @@ b1BBE   LDA #<p0200
 b1BE8   LDA scoreLineText1,X
         AND #$BF
         STA charToDraw
-        LDA #$07
+        LDA #YELLOW
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrYPPos
@@ -565,7 +565,7 @@ b1C8E   LDA #leftLaserheadFull
         JSR UpdateCharToDraw
         LDA a16
         STA screenPtrXPos
-        LDA #$07
+        LDA #YELLOW
         STA colorToDraw
         LDA a17
         STA screenPtrYPPos
@@ -575,7 +575,7 @@ b1C8E   LDA #leftLaserheadFull
         JSR UpdateCharToDraw
         LDA a14
         STA screenPtrXPos
-        LDA #$04
+        LDA #PURPLE
         STA colorToDraw
         LDA a15
         STA screenPtrYPPos
@@ -601,7 +601,7 @@ b1CC1   STA charToDraw
 LeftRightLaserheadFirstFrame
         LDA #leftLaserheadTopHalf
         JSR UpdateCharToDraw
-        LDA #$07
+        LDA #YELLOW
         STA colorToDraw
         LDA a16
         STA screenPtrXPos
@@ -615,7 +615,7 @@ LeftRightLaserheadFirstFrame
         JSR MoveLaserhead
         LDA #rightLaserheadTopHalf
         JSR UpdateCharToDraw
-        LDA #$04
+        LDA #PURPLE
         STA colorToDraw
         LDA a14
         STA screenPtrXPos
@@ -638,7 +638,7 @@ MoveTopBottomLaserheads
 
 b1D0B   LDA #bottomLaserheadFull
         JSR UpdateCharToDraw
-        LDA #$07
+        LDA #YELLOW
         STA colorToDraw
         LDA a12
         STA screenPtrXPos
@@ -647,7 +647,7 @@ b1D0B   LDA #bottomLaserheadFull
         JSR MoveLaserhead
         LDA #topLaserheadFull
         JSR UpdateCharToDraw
-        LDA #$04
+        LDA #PURPLE
         STA colorToDraw
         LDA a10
         STA screenPtrXPos
@@ -662,7 +662,7 @@ b1D0B   LDA #bottomLaserheadFull
 BottomTopFirstFrame
         LDA #bottomLaserheadLeftHalf
         JSR UpdateCharToDraw
-        LDA #$07
+        LDA #YELLOW
         STA colorToDraw
         LDA a12
         STA screenPtrXPos
@@ -674,7 +674,7 @@ BottomTopFirstFrame
         JSR UpdateCharToDraw
         INC screenPtrXPos
         JSR MoveLaserhead
-        LDA #$04
+        LDA #PURPLE
         STA colorToDraw
         LDA a10
         STA screenPtrXPos
@@ -1151,7 +1151,7 @@ b2070   LDA colorToDraw
 ; UpdateBullets
 ;-------------------------------
 UpdateBullets
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDX #$00
 b2099   LDA bulletColorArray,X
@@ -1481,7 +1481,7 @@ EnemyAnimationRoutine
         BEQ b22BE
         JMP j23C4
 
-b22BE   LDA #$01
+b22BE   LDA #WHITE
         STA colorToDraw
         LDA #$B0
         STA VICCRD   ;$900D - frequency of sound osc.4 (noise)
@@ -2564,7 +2564,7 @@ b2A4A   LDA a2C
 ; j2A58
 ;-------------------------------
 j2A58
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         INC enemyCharArray,X
         LDA enemyCharArray,X
@@ -2749,7 +2749,7 @@ b2B7B   DEY
         BNE b2B6B
         TXA
         STA charToDraw
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         DEC screenPtrYPPos
         JMP DrawCharacter
@@ -3097,7 +3097,7 @@ DrawZappers
         STA screenPtrXPos
         LDA enemyYPosArray,X
         STA screenPtrYPPos
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA enemyCharArray,X
         CMP #$02
@@ -3192,7 +3192,7 @@ b2E5C   INX
 b2E84   LDA txtAttackWaveZapped,X
         AND #$3F
         STA charToDraw
-        LDA #$03
+        LDA #CYAN
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
@@ -3392,7 +3392,7 @@ txtAttackWaveZapped   .TEXT "ATTACK WAVE 00 ZAPPED"
 ; s3241
 ;------------------------------------------------
 s3241
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA a36
         BEQ b324A
@@ -3490,7 +3490,7 @@ b32C6   LDA enemyXPosArray,X
         STA colorToDraw
         JMP j3304
 
-b32F0   LDA #$00
+b32F0   LDA #BLACK
         STA colorToDraw
         LDA #$00
         STA f3E00,X
@@ -3508,7 +3508,7 @@ j3304
 
 b330E   LDA enemyCharArray,X
         BNE b331E
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA #$AD
         STA charToDraw
@@ -3516,7 +3516,7 @@ b330E   LDA enemyCharArray,X
 
 b331E   LDA #$AE ; Goat
         STA charToDraw
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
@@ -3683,7 +3683,7 @@ DrawTitleScreen2
         LDX #$00
         LDA #$01
         STA screenPtrXPos
-b3439   LDA #$02
+b3439   LDA #RED
         STA colorToDraw
         LDA #$01
         STA screenPtrYPPos
@@ -3691,7 +3691,7 @@ b3439   LDA #$02
         AND #$3F
         STA charToDraw
         JSR DrawCharacter
-        LDA #$03
+        LDA #CYAN
         STA colorToDraw
         STA screenPtrYPPos
         STA VICCRB   ;$900B - frequency of sound osc.2 (alto)
@@ -3701,7 +3701,7 @@ b3439   LDA #$02
         JSR DrawCharacter
         LDA #$1A
         STA screenPtrYPPos
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA titleScreen2Text3,X
         AND #$3F
@@ -3847,7 +3847,7 @@ b359A   JSR DrawTitleScreen2
         STA screenPtrYPPos
         LDA #$11
         STA screenPtrXPos
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA a33
         STA a55
@@ -3906,7 +3906,7 @@ b3615   LDA a55
         AND #$1F
         STA a55
         STA charToDraw
-        LDA #$03
+        LDA #CYAN
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
@@ -3932,7 +3932,7 @@ DrawTitleScreen
         STA VICCRF   ;$900F - screen colors: background, border & inverse
         LDA #$90
         STA VICCRE   ;$900E - sound volume
-        LDA #$0F
+        LDA #LTYELLOW
         STA colorToDraw
         LDA #$40
         STA a09
@@ -4086,7 +4086,7 @@ DrawTitleScreenText
         INC a08
         DEC pulsingColorArrayIndex
         JSR DrawPattern
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         LDA #$00
         STA screenPtrXPos
@@ -4238,7 +4238,7 @@ DrawEntryPlayersText
 b3895   LDA entryPlayersText,X
         AND #$3F
         STA charToDraw
-        LDA #$01
+        LDA #WHITE
         STA colorToDraw
         JSR DrawCharacter
         INC screenPtrXPos
