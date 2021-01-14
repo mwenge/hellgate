@@ -3,7 +3,7 @@
 
 This is the disassembled and [commented source code] for the 1984 Commodore Vic 20 game Hellgate by Jeff Minter. 
 
-A version of the game you can [play in your browser can be found here]. (Use the arrow keys and `ctrl` to manipulate the display, or use a gamepad if you have one plugged in. See the manual below for more.)
+A version of the game you can [play in your browser can be found here]. (Use the arrow keys to move and `ctrl` to fire.)
 
 ## Requirements
 
