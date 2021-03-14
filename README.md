@@ -1,4 +1,4 @@
-# Hell Gate by Jeff Minter
+# Hell Gate (1984) by Jeff Minter
 <img src="https://www.mobygames.com/images/covers/l/510954-hellgate-commodore-64-front-cover.jpg" height=300><img src="https://user-images.githubusercontent.com/58846/104652406-f9327b00-56b0-11eb-948b-101ce169ef71.gif" height=300>
 
 This is the disassembled and [commented source code] for the 1984 Commodore Vic 20 game Hellgate by Jeff Minter. 
