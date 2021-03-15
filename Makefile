@@ -12,7 +12,7 @@ hellgate.prg: src/hellgate.asm
 	md5sum bin/hellgate.prg orig/hellgate.prg
 
 run: hellgate.prg
-	$(XVIC) -verbose $(VIC_IMAGE)
+	$(XVIC) -drive8ram2000 -memory 8k -verbose $(XVIC_IMAGE)
 
 run_orig:
 	$(XVIC) -verbose -moncommands bin/labels.txt $(VIC_ORIG_IMAGE)
